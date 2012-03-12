@@ -1,9 +1,13 @@
 package br.org.ttsfiler.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import br.org.ttsfiler.enumerator.HTTPMethod;
 
@@ -48,12 +52,42 @@ public class HTTPRequestHandler implements Runnable
 	protected void readRequestMessages()
 	{
 		this.requestMessages = new ArrayList<String>();
+		try 
+		{
+			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String requestInfo = input.readLine();
+			while(requestInfo != null)
+			{
+				this.requestMessages.add(requestInfo);
+				requestInfo = input.readLine();
+				if(requestInfo.equals(""))
+					break;
+			}
+			socket.shutdownInput();
+		}
+		catch (IOException e) 
+		{
+			System.out.println("Arrrgh!!! We have a problem in reading the request messages");
+			e.printStackTrace();
+		}
+
 	}
 	
 	
 	protected void loadHTTPRequest()
 	{
-		this.httpRequest = new HTTPRequest(HTTPMethod.GET, "/pagina.html");
+		String requestHeaderMessage = this.requestMessages.get(0);
+		String regexForHTTPMessage = "(GET|POST|PUT|DELETE)\\s([\\w/.]+)\\s([\\w/.]+)";
+		Pattern pattern = Pattern.compile(regexForHTTPMessage);
+		Matcher matcher = pattern.matcher(requestHeaderMessage);
+		if(matcher.matches())
+		{
+			this.httpRequest = new HTTPRequest(matcher.group(1), matcher.group(2));
+		}
+		else
+		{
+			System.out.println("Argh!! An error have been found trying to parser the HTTP REquest Header MEssage");
+		}
 	}
 	
 	
@@ -61,23 +95,5 @@ public class HTTPRequestHandler implements Runnable
 	{
 		
 	}
-	
-	
-//	public RequestData getRequestData(List<String> data)
-//	{
-//		String requestHeader = data.get(0);
-//		String regex = "(GET|POST|PUT|DELETE)\\s([\\w/.]+)\\s([\\w/.]+)";
-//		Pattern pattern = Pattern.compile(regex);
-//		Matcher matcher = pattern.matcher(requestHeader);
-//		
-//		if(matcher.matches())
-//		{
-//			RequestData requestData = new RequestData(matcher.group(1), matcher.group(2));
-//			return requestData;
-//		}
-//		
-//		
-//		return null;
-//	}
 
 }
