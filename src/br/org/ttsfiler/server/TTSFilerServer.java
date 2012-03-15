@@ -79,9 +79,10 @@ public class TTSFilerServer
 	
 	public static void main(String[] args) throws IOException
 	{
-		TTSFilerServer server = new TTSFilerServer();
+		TTSFilerServer server = new TTSFilerServer(54873);
 		try 
 		{
+			System.out.println("starting");
 			server.start();
 		}
 		catch (TTSFilerException e) 

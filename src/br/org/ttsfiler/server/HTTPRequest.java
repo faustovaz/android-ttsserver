@@ -22,6 +22,7 @@ public class HTTPRequest
 	{
 		this.setHTTPMethodEnum(method);
 		this.resource = requestedResource;
+		System.out.println(this.resource);
 		this.data = "";
 	}
 
@@ -53,10 +54,13 @@ public class HTTPRequest
 	private void setHTTPMethodEnum(String method)
 	{
 		if(method.equals(HTTPMethod.GET.toString()))
+		{
 			this.method = HTTPMethod.GET;
+		}
 		else
-			if(method.equals(HTTPMethod.POST.toString()))
-				this.method = HTTPMethod.POST;
+		{
+			this.method = HTTPMethod.POST;
+		}
 	}
 	
 }

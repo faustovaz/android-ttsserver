@@ -1,15 +1,16 @@
 package br.org.ttsfiler.server;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import br.org.ttsfiler.enumerator.HTTPMethod;
 
 public class HTTPRequestHandler implements Runnable 
 {
@@ -93,6 +94,89 @@ public class HTTPRequestHandler implements Runnable
 	
 	protected void sendResponse()
 	{
+		String defaultDir = "/home/fausto/www";
+		String resource = this.httpRequest.getResource();
+		
+		try 
+		{
+			if(resource.equals("/site/javahowto.jpg"))
+			{
+				FileInputStream fileInputStream = new FileInputStream(defaultDir + resource);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(fileInputStream)));
+				String line;
+				StringBuffer buffer = new StringBuffer();
+				int contentLength = 0;
+				while((line = reader.readLine()) != null)
+				{
+					line = line.trim();
+					buffer.append(line);
+					contentLength += line.length();
+					
+				}
+				
+				PrintStream input = new PrintStream(this.socket.getOutputStream());
+				input.println("HTTP/1.1 200 OK");
+				input.println("Content_type: image/gif");
+				input.println("Content_length: " + contentLength);
+				input.println("");
+				input.println(buffer.toString());
+				input.close();
+				this.socket.close();
+			}
+			else
+			{
+			
+				FileInputStream fileInputStream = new FileInputStream(defaultDir + resource);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(fileInputStream)));
+				String line;
+				StringBuffer buffer = new StringBuffer();
+				int contentLength = 0;
+				while((line = reader.readLine()) != null)
+				{
+					line = line.trim();
+					buffer.append(line);
+					contentLength += line.length();
+					
+				}
+				
+				PrintStream input = new PrintStream(this.socket.getOutputStream());
+				input.println("HTTP/1.1 200 OK");
+				input.println("Content_type: text/html");
+				input.println("Content_length: " + contentLength);
+				input.println("");
+				input.println(buffer.toString());
+				input.close();
+				this.socket.close();
+			}
+		} 
+		catch (IOException e) 
+		{
+			PrintStream input;
+			try 
+			{
+				input = new PrintStream(this.socket.getOutputStream());
+				input.println("HTTP/1.1 404 NOTFOUND");
+				input.println("Content-type: text/html");
+				
+				String content = "<html><head></head><body><h1>NOT FOUND</h1></body></html>";
+				
+				input.println("Content-length: " + content.length());
+				input.println("");
+				input.println(content);
+				
+				input.close();
+				this.socket.close();
+			} 
+			catch (IOException e1) 
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		} 
+		
+		
+		//this.httpRequest.
 		
 	}
 
