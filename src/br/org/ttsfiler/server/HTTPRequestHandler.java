@@ -2,10 +2,12 @@ package br.org.ttsfiler.server;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,32 +96,31 @@ public class HTTPRequestHandler implements Runnable
 	
 	protected void sendResponse()
 	{
-		String defaultDir = "/home/fausto/www";
+		//String defaultDir = "/home/fausto/www";
+		String defaultDir = "D:\\www";
 		String resource = this.httpRequest.getResource();
 		
 		try 
 		{
-			if(resource.equals("/site/javahowto.jpg"))
+			if(resource.equals("/foto.jpg"))
 			{
-				FileInputStream fileInputStream = new FileInputStream(defaultDir + resource);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(fileInputStream)));
-				String line;
-				StringBuffer buffer = new StringBuffer();
-				int contentLength = 0;
-				while((line = reader.readLine()) != null)
-				{
-					line = line.trim();
-					buffer.append(line);
-					contentLength += line.length();
-					
-				}
+				File file = new File(defaultDir + resource);
+				FileInputStream fileInputStream = new FileInputStream(file);
+				DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+				byte bytes[] = new byte[(int) file.length()];
+				dataInputStream.readFully(bytes);
+				
+				System.out.println(Integer.MAX_VALUE);
+				System.out.println(bytes.length);
+				System.out.println(bytes);
 				
 				PrintStream input = new PrintStream(this.socket.getOutputStream());
 				input.println("HTTP/1.1 200 OK");
 				input.println("Content_type: image/gif");
-				input.println("Content_length: " + contentLength);
+				input.println("Content_type: text/html");
+				input.println("Content_length: " + bytes.length);
 				input.println("");
-				input.println(buffer.toString());
+				input.write(bytes);
 				input.close();
 				this.socket.close();
 			}
@@ -140,6 +141,9 @@ public class HTTPRequestHandler implements Runnable
 				}
 				
 				PrintStream input = new PrintStream(this.socket.getOutputStream());
+				PrintWriter w = new PrintWriter(this.socket.getOutputStream());
+				
+				
 				input.println("HTTP/1.1 200 OK");
 				input.println("Content_type: text/html");
 				input.println("Content_length: " + contentLength);
