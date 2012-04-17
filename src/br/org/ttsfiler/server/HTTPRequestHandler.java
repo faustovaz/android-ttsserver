@@ -7,12 +7,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.activation.MimetypesFileTypeMap;
+
+import br.org.ttsfiler.util.TTSServerProperties;
 
 public class HTTPRequestHandler implements Runnable 
 {
@@ -96,78 +99,37 @@ public class HTTPRequestHandler implements Runnable
 	
 	protected void sendResponse()
 	{
-		//String defaultDir = "/home/fausto/www";
-		String defaultDir = "D:\\www";
-		String resource = this.httpRequest.getResource();
-		
+		File file;
+		FileInputStream fileInputStream;
+		DataInputStream dataInputStream;
+		byte bytes[];
 		try 
 		{
-			if(resource.equals("/foto.jpg"))
-			{
-				File file = new File(defaultDir + resource);
-				FileInputStream fileInputStream = new FileInputStream(file);
-				DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-				byte bytes[] = new byte[(int) file.length()];
-				dataInputStream.readFully(bytes);
-				
-				System.out.println(Integer.MAX_VALUE);
-				System.out.println(bytes.length);
-				System.out.println(bytes);
-				
-				PrintStream input = new PrintStream(this.socket.getOutputStream());
-				input.println("HTTP/1.1 200 OK");
-				input.println("Content_type: image/gif");
-				input.println("Content_type: text/html");
-				input.println("Content_length: " + bytes.length);
-				input.println("");
-				input.write(bytes);
-				input.close();
-				this.socket.close();
-			}
-			else
-			{
+			file = new File(TTSServerProperties.getDocumentRoot() + this.httpRequest.getResource());
+			fileInputStream = new FileInputStream(file);
+			dataInputStream = new DataInputStream(fileInputStream);
+			bytes = new byte[(int) file.length()];
+			dataInputStream.readFully(bytes);
 			
-				FileInputStream fileInputStream = new FileInputStream(defaultDir + resource);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(fileInputStream)));
-				String line;
-				StringBuffer buffer = new StringBuffer();
-				int contentLength = 0;
-				while((line = reader.readLine()) != null)
-				{
-					line = line.trim();
-					buffer.append(line);
-					contentLength += line.length();
-					
-				}
-				
-				PrintStream input = new PrintStream(this.socket.getOutputStream());
-				PrintWriter w = new PrintWriter(this.socket.getOutputStream());
-				
-				
-				input.println("HTTP/1.1 200 OK");
-				input.println("Content_type: text/html");
-				input.println("Content_length: " + contentLength);
-				input.println("");
-				input.println(buffer.toString());
-				input.close();
-				this.socket.close();
-			}
-		} 
+			PrintStream input = new PrintStream(this.socket.getOutputStream());
+			input.print(this.buildHTMLHeader(file));
+			input.write(bytes);
+			input.close();
+			this.socket.close();
+		}
 		catch (IOException e) 
 		{
 			PrintStream input;
 			try 
 			{
 				input = new PrintStream(this.socket.getOutputStream());
-				input.println("HTTP/1.1 404 NOTFOUND");
-				input.println("Content-type: text/html");
-				
-				String content = "<html><head></head><body><h1>NOT FOUND</h1></body></html>";
-				
-				input.println("Content-length: " + content.length());
-				input.println("");
-				input.println(content);
-				
+				file = new File(TTSServerProperties.getDocumentRoot() + "/404.html");
+				fileInputStream = new FileInputStream(file);
+				dataInputStream = new DataInputStream(fileInputStream);
+				bytes = new byte[(int) file.length()];
+				dataInputStream.readFully(bytes);
+				input.print(this.buildHTML404Header(file));
+				input.write(bytes);
 				input.close();
 				this.socket.close();
 			} 
@@ -178,10 +140,25 @@ public class HTTPRequestHandler implements Runnable
 			}
 
 		} 
-		
-		
-		//this.httpRequest.
-		
+	}
+	
+	protected String buildHTMLHeader(File requiredResource)
+	{
+		MimetypesFileTypeMap mimeTypeMap = new MimetypesFileTypeMap();
+		String header = "HTTP/1.1 200 OK\n";
+		header = header + "Content_type: " + mimeTypeMap.getContentType(requiredResource) + "\n";
+		header = header + "Content_length: " + requiredResource.length() + "\n";
+		header = header + "\n";
+		return header;
+	}
+	
+	protected String buildHTML404Header(File requiredResource)
+	{
+		String header = "HTTP/1.1 404 NOTFOUND\n";
+		header = header + "Content-type: text/html\n";
+		header = header + "Content-length: " + requiredResource.length() + "\n";
+		header = header + "\n";
+		return header;
 	}
 
 }
