@@ -13,7 +13,7 @@ public class HTTPRequest
 	public HTTPRequest(HTTPMethod method, String requestedResource)
 	{
 		this.method = method;
-		this.resource = requestedResource;
+		this.setResource(requestedResource);
 		this.data = "";
 	}
 	
@@ -21,7 +21,7 @@ public class HTTPRequest
 	public HTTPRequest(String method, String requestedResource)
 	{
 		this.setHTTPMethodEnum(method);
-		this.resource = requestedResource;
+		this.setResource(requestedResource);
 		System.out.println(this.resource);
 		this.data = "";
 	}
@@ -50,6 +50,12 @@ public class HTTPRequest
 		return this.method == HTTPMethod.POST;
 	}
 	
+	
+	public void setResource(String resource)
+	{
+		if(resource.equals("/"))
+			this.resource = "index.html";
+	}
 	
 	private void setHTTPMethodEnum(String method)
 	{

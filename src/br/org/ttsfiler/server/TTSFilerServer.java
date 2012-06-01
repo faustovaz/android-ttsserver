@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import br.org.ttsfiler.exception.TTSFilerException;
-
 public class TTSFilerServer 
 {
 
@@ -25,7 +23,7 @@ public class TTSFilerServer
 	}
 	
 	
-	public void start() throws TTSFilerException
+	public void start()
 	{
 		try
 		{
@@ -34,12 +32,12 @@ public class TTSFilerServer
 		}
 		catch (IOException e)
 		{
-			throw new TTSFilerException("Some error ocurred while trying to start the TTSFilerServer", e.getCause());
+			e.printStackTrace(); //TODO Handle the exception
 		}
 	}
 	
 	
-	public void stop() throws TTSFilerException
+	public void stop() throws IOException
 	{
 		try
 		{
@@ -47,24 +45,17 @@ public class TTSFilerServer
 		} 
 		catch (IOException e) 
 		{
-			throw new TTSFilerException("Some error ocurred while trying to stop the TTSFilerServer", e.getCause());
+			e.printStackTrace(); //TODO Handle the exception
 		}
 	}
 	
 	
-	protected void listen() throws TTSFilerException
+	protected void listen() throws IOException
 	{
 		while(true)
 		{
-			try 
-			{
-				Socket socket = this.server.accept();
-				this.startHTTPRequestHandlerJob(socket);
-			}
-			catch (Exception e) 
-			{
-				throw new TTSFilerException("Impossible to accept new connection in TTSFilerServer", e.getCause());
-			}
+			Socket socket = this.server.accept();
+			this.startHTTPRequestHandlerJob(socket);
 		}
 	}
 
@@ -74,22 +65,6 @@ public class TTSFilerServer
 		HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(socket);
 		Thread httpHandlerJob = new Thread(httpRequestHandler);
 		httpHandlerJob.start();
-	}
-
-	
-	public static void main(String[] args) throws IOException
-	{
-		TTSFilerServer server = new TTSFilerServer(54873);
-		try 
-		{
-			System.out.println("starting");
-			server.start();
-		}
-		catch (TTSFilerException e) 
-		{
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
 	}
 
 }

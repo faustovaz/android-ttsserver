@@ -10,19 +10,18 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import br.org.ttsfiler.util.TTSServerProperties;
+import br.org.ttsfiler.enumerator.HTTPMethod;
 
 public class HTTPRequestHandler implements Runnable 
 {
 
 	private Socket socket;
-	private List<String> requestMessages;
-	private HTTPRequest httpRequest;
+	private List<String> httpRequestHeaders;
+	private String resource;
+	private HTTPMethod method;
 	
 	
 	public HTTPRequestHandler(Socket socket)
@@ -36,79 +35,65 @@ public class HTTPRequestHandler implements Runnable
 	{
 		try 
 		{
-			this.processRequest();
+			this.handleRequest();
 			this.socket.close();
 		} 
 		catch (IOException e) 
 		{
-			System.out.println("Arrrgh!!! We have a problem in closing the connection with some client!");
-			e.printStackTrace();
+			e.printStackTrace(); //TODO Handle properly this exception;
 		}
 	}
 	
 	
-	protected void processRequest()
+	protected void handleRequest() throws IOException
 	{
-		this.readRequestMessages();
-		this.loadHTTPRequest();
+		this.readHTTPHeaders();
+		this.loadHTTPMethodOfRequest();
+		this.processHTTPRequest();
 		this.sendResponse();
 	}
 	
 	
-	protected void readRequestMessages()
+	protected void readHTTPHeaders() throws IOException
 	{
-		this.requestMessages = new ArrayList<String>();
-		try 
+		this.httpRequestHeaders = new ArrayList<String>();
+		InputStreamReader input = new InputStreamReader(socket.getInputStream());
+		BufferedReader reader = new BufferedReader(input);
+		String requestInfo = "";
+		while((requestInfo = reader.readLine()) != null)
 		{
-			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String requestInfo = input.readLine();
-			while(requestInfo != null)
-			{
-				this.requestMessages.add(requestInfo);
-				requestInfo = input.readLine();
-				if(requestInfo.equals(""))
-					break;
-			}
-			socket.shutdownInput();
+			this.httpRequestHeaders.add(requestInfo);
+			if(requestInfo.equals(""))
+				break;
 		}
-		catch (IOException e) 
-		{
-			System.out.println("Arrrgh!!! We have a problem in reading the request messages");
-			e.printStackTrace();
-		}
-
 	}
 	
 	
-	protected void loadHTTPRequest()
+	protected void loadHTTPMethodOfRequest()
 	{
-		String requestHeaderMessage = this.requestMessages.get(0);
-		String regexForHTTPMessage = "(GET|POST|PUT|DELETE)\\s([\\w/.]+)\\s([\\w/.]+)";
-		Pattern pattern = Pattern.compile(regexForHTTPMessage);
-		Matcher matcher = pattern.matcher(requestHeaderMessage);
-		if(matcher.matches())
-		{
-			this.httpRequest = new HTTPRequest(matcher.group(1), matcher.group(2));
-		}
-		else
-		{
-			System.out.println("Argh!! An error have been found trying to parser the HTTP REquest Header MEssage");
-		}
+		String header = this.httpRequestHeaders.get(0); //Format: METHOD RESOURCE HTTPVERSION - ex.: GET /index.html HTTP1.1
+		String headerParts[] = header.split("\\s");
+		this.setHTTPMethod(headerParts[0]);
+		this.setResource(headerParts[1]);
+	}
+	
+	
+	protected void processHTTPRequest()
+	{
+	//	TemplateEngine engine = new TemplateEngine("resources/webappfiles/index.tpl");
+	//	engine.createHTMLFile();
+		
 	}
 	
 	
 	protected void sendResponse()
 	{
-		File file;
-		FileInputStream fileInputStream;
-		DataInputStream dataInputStream;
-		byte bytes[];
 		try 
 		{
-			file = new File(TTSServerProperties.getDocumentRoot() + this.httpRequest.getResource());
-			fileInputStream = new FileInputStream(file);
-			dataInputStream = new DataInputStream(fileInputStream);
-			bytes = new byte[(int) file.length()];
+			File file = new File("resources/webappfiles/" + this.getResource());
+			FileInputStream fileInputStream = new FileInputStream(file);
+			DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+			byte bytes[] = new byte[(int) file.length()];
 			dataInputStream.readFully(bytes);
 			
 			PrintStream input = new PrintStream(this.socket.getOutputStream());
@@ -119,28 +104,10 @@ public class HTTPRequestHandler implements Runnable
 		}
 		catch (IOException e) 
 		{
-			PrintStream input;
-			try 
-			{
-				input = new PrintStream(this.socket.getOutputStream());
-				file = new File(TTSServerProperties.getDocumentRoot() + "/404.html");
-				fileInputStream = new FileInputStream(file);
-				dataInputStream = new DataInputStream(fileInputStream);
-				bytes = new byte[(int) file.length()];
-				dataInputStream.readFully(bytes);
-				input.print(this.buildHTML404Header(file));
-				input.write(bytes);
-				input.close();
-				this.socket.close();
-			} 
-			catch (IOException e1) 
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
+			this.send404Response();
 		} 
 	}
+	
 	
 	protected String buildHTMLHeader(File requiredResource)
 	{
@@ -152,6 +119,28 @@ public class HTTPRequestHandler implements Runnable
 		return header;
 	}
 	
+	
+	protected void send404Response()
+	{
+		try 
+		{
+			PrintStream input = new PrintStream(this.socket.getOutputStream());
+			File file = new File("resources/webappfiles/404.html");
+			FileInputStream fileInputStream = new FileInputStream(file);
+			DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+			byte bytes[] = new byte[(int) file.length()];
+			dataInputStream.readFully(bytes);
+			input.print(this.buildHTML404Header(file));
+			input.write(bytes);
+			input.close();
+			this.socket.close();
+		} 
+		catch (IOException e1) 
+		{
+			e1.printStackTrace();
+		}
+	}
+	
 	protected String buildHTML404Header(File requiredResource)
 	{
 		String header = "HTTP/1.1 404 NOTFOUND\n";
@@ -160,5 +149,38 @@ public class HTTPRequestHandler implements Runnable
 		header = header + "\n";
 		return header;
 	}
+	
+	
+	protected void setHTTPMethod(String method)
+	{
+		if(method.equals(HTTPMethod.GET.toString()))
+		{
+			this.method = HTTPMethod.GET;
+		}
+		else
+		{
+			this.method = HTTPMethod.POST;
+		}
+	}
+	
+	protected void setResource(String resource)
+	{
+		this.resource = resource;
+	}
+	
+	protected String getResource()
+	{
+		if(this.resource.equals("/"))
+			return "index.html";
+		else
+			return this.resource;
+	}
+	
+	
+	protected boolean isGET()
+	{
+		return this.method.equals(HTTPMethod.GET);
+	}
+	
 
 }
