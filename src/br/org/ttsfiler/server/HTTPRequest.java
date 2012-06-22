@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.org.ttsfiler.enumerator.HTTPMethod;
+import br.org.ttsfiler.util.HTTPRequestParser;
 
 /**
  * 
@@ -16,35 +17,11 @@ public class HTTPRequest
 	private String resource;
 	private HTTPMethod method;
 	private Map<String, String> headers;
+	private HTTPRequestParser httpRequestParser;
 	
-	
+		
 	/**
-	 * 
-	 * @param method
-	 * @param requestedResource
-	 */
-	public HTTPRequest(HTTPMethod method, String requestedResource)
-	{
-		this.method = method;
-		this.setResource(requestedResource);
-		this.headers = new HashMap<String, String>();
-	}
-	
-	
-	/**
-	 * 
-	 * @param method
-	 * @param requestedResource
-	 */
-	public HTTPRequest(String method, String requestedResource)
-	{
-		this.setHTTPMethodEnum(method);
-		this.setResource(requestedResource);
-	}
-
-	
-	/**
-	 * 
+	 * @
 	 * @return
 	 */
 	public String getResource()
@@ -77,7 +54,7 @@ public class HTTPRequest
 	 * 
 	 * @param resource
 	 */
-	public void setResource(String resource)
+	protected void setResource(String resource)
 	{
 		this.resource = resource;
 	}
@@ -87,7 +64,7 @@ public class HTTPRequest
 	 * 
 	 * @param method
 	 */
-	protected void setHTTPMethodEnum(String method)
+	protected void setHTTPMethod(String method)
 	{
 		this.method = (method.equals(HTTPMethod.GET.toString())) ? HTTPMethod.GET : HTTPMethod.POST;
 	}
@@ -98,8 +75,7 @@ public class HTTPRequest
 	 * @param property
 	 * @param value
 	 */
-	public void addHTTPHeaderField(String field, String value)
-	{
+	public void addHTTPHeaderField(String field, String value){
 		if(this.headers == null)
 			this.headers = new HashMap<String, String>();
 		this.headers.put(field, value);
@@ -111,8 +87,32 @@ public class HTTPRequest
 	 * @param name
 	 * @return
 	 */
-	public String getHTTPHeaderField(String name)
-	{
+	public String getHTTPHeaderFieldValue(String name){
 		return this.headers.get(name);
+	}
+	
+	
+	/**
+	 * 
+	 * @param header
+	 */
+	public void addHTTPHeader(String header){
+		HTTPRequestParser httpRequestParser = getHTTPRequestParser();
+		httpRequestParser.parseHTTPHeader(header);
+		
+		if(httpRequestParser.isHTTPMethodDescriptor()){ //Load the first line of the message, example: HTTP1.1 /index.hml GET
+			this.setHTTPMethod(httpRequestParser.getMethod());
+			this.setResource(httpRequestParser.getResource());
+		}
+		else{
+			this.addHTTPHeaderField(httpRequestParser.getField(), httpRequestParser.getFieldValue());
+		}
+	}
+	
+	
+	protected HTTPRequestParser getHTTPRequestParser(){
+		if (this.httpRequestParser == null)
+			this.httpRequestParser = new HTTPRequestParser();
+		return this.httpRequestParser;
 	}
 }
