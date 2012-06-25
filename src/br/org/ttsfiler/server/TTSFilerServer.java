@@ -5,11 +5,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
+ * <b>TTSFileServer</b>
+ * </br>
+ * TTSFileServer is responsible for listen some TCP/IP Port, receive connections and start HTTPRequestHandler
+ * @author Fausto Vaz
  * 
- * 
- * @author jefferson.fausto
  */
-
 public class TTSFilerServer{
 
 	private ServerSocket server;
@@ -34,7 +35,7 @@ public class TTSFilerServer{
 	
 	
 	/**
-	 * 
+	 * Starting listen to the {this.port}
 	 */
 	public void start(){
 		try	{
@@ -48,7 +49,7 @@ public class TTSFilerServer{
 	
 	
 	/**
-	 * 
+	 * Stop the server
 	 * @throws IOException
 	 */
 	public void stop() throws IOException	{
@@ -74,7 +75,7 @@ public class TTSFilerServer{
 
 	
 	/**
-	 * 
+	 * Create a new instance of HTTPRequestHandler and start the Thread which is going to handle the HTTP Request
 	 * @param socket
 	 */
 	protected void startHTTPRequestHandlerJob(Socket socket){

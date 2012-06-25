@@ -1,47 +1,25 @@
 package br.org.ttsfiler.server;
+import java.io.File;
 
-import br.org.ttsfiler.enumerator.HTTPMethod;
+import javax.activation.MimetypesFileTypeMap;
 
-public class RequestData 
-{
+class RequestData {
+    public static void main(String[] args) {
+        System.out.println(System.getProperty("java.version"));
 
-	private HTTPMethod method;
-	private String requestedResource;
-	
-	public RequestData(HTTPMethod method, String requestedResource)
-	{
-		this.method = method;
-		this.requestedResource = requestedResource;
-	}
-	
-	public RequestData(String method, String requestedResource)
-	{
-		if(method.equals(HTTPMethod.GET.toString()))
-			this.method = HTTPMethod.GET;
-		else
-			if(method.equals(HTTPMethod.POST.toString()))
-				this.method = HTTPMethod.POST;
-		
-		this.requestedResource = requestedResource;
-		
-	}
+        File f = new File(System.getProperty("java.home"), "lib");
+        f = new File(f, "mime.types");
+        System.out.println(f.exists() + " \t - " +f
+        		);
 
+        f = new File(System.getProperty("user.home"), ".mime.types");
+        System.out.println(f.exists() + " \t - " +f);
 
-	public String getRequestedResource()
-	{
-		return this.requestedResource;
-	}
-	
-	public boolean isGET()
-	{
-		return this.method == HTTPMethod.GET;
-	}
-	
-	public boolean isPOST()
-	{
-		return this.method == HTTPMethod.POST;
-	}
-	
-	
-	
+        MimetypesFileTypeMap mfm = new MimetypesFileTypeMap();
+        System.out.println(mfm.getContentType("a.js"));
+        System.out.println(mfm.getContentType("a.png"));
+        System.out.println(mfm.getContentType("a.jpg"));
+        System.out.println(mfm.getContentType("a.au"));
+        System.out.println(mfm.getContentType("a.htm"));
+    }
 }

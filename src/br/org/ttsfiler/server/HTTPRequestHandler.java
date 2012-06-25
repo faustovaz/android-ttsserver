@@ -4,32 +4,40 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import javax.activation.MimetypesFileTypeMap;
+import br.org.ttsfiler.util.HTTPHeaderBuilder;
+import br.org.ttsfiler.util.TTSServerProperties;
+import br.org.ttsfiler.util.TemplateEngine;
 
 /**
- * 
- * @author jefferson.fausto
+ * <b> HTTPRequestHandler </b>
+ * </br>
+ * Handle HTTP Requests
+ * @author Fausto Vaz
  */
 public class HTTPRequestHandler implements Runnable 
 {
 
+	
 	private Socket socket;
 	private HTTPRequest httpRequest;
+	private HTTPHeaderBuilder httpHeaderBuilder;
 	
 	
 	/**
 	 * 
 	 * @param socket
 	 */
-	public HTTPRequestHandler(Socket socket)
-	{
+	public HTTPRequestHandler(Socket socket){
 		this.socket = socket;
+		this.httpHeaderBuilder = new HTTPHeaderBuilder();
 	}
+	
 	
 	
 	/**
@@ -45,6 +53,7 @@ public class HTTPRequestHandler implements Runnable
 			e.printStackTrace(); //TODO Handle properly this exception;
 		}
 	}
+
 	
 	
 	/**
@@ -54,8 +63,8 @@ public class HTTPRequestHandler implements Runnable
 	protected void handleRequest() throws IOException	{
 		this.readHTTPHeaders();
 		this.processHTTPRequest();
-		this.sendResponse();
 	}
+	
 	
 	
 	/**
@@ -74,57 +83,68 @@ public class HTTPRequestHandler implements Runnable
 	}
 	
 	
+	
 	/**
-	 * 
+	 * Handle HTTP and process request depending on HTTP Method
 	 */
 	protected void processHTTPRequest()
 	{
+		TemplateEngine templateEngine = new TemplateEngine();
 		if(this.httpRequest.isGET()){
+			templateEngine.generateRequestedResourceFromTemplate(TTSServerProperties.getDocumentRoot() + this.httpRequest.getResource());
 			this.sendResponse();
 		}
 		else{
-			//Tratar post
+			
+			//Handle POST HTTP Request
 		}
 	}
+	
 	
 	
 	/**
 	 * 
 	 */
 	protected void sendResponse(){
+		File file;
+		FileInputStream fileInputStream;
 		try	{
-			File file = new File("resources/webappfiles/" + this.httpRequest.getResource());
-			FileInputStream fileInputStream = new FileInputStream(file);
+			file = new File(TTSServerProperties.getDocumentRoot() + this.httpRequest.getResource());
+			fileInputStream = new FileInputStream(file);
 			DataInputStream dataInputStream = new DataInputStream(fileInputStream);
 			byte bytes[] = new byte[(int) file.length()];
 			dataInputStream.readFully(bytes);
 			
 			PrintStream input = new PrintStream(this.socket.getOutputStream());
-			input.print(this.buildHTMLHeader(file));
+			input.print(this.httpHeaderBuilder.buildHTTP200Header(file));
 			input.write(bytes);
 			input.close();
 			this.socket.close();
 		}
+		catch(FileNotFoundException fileNotFound){
+			try{
+				file = new File(TTSServerProperties.uploadedFilesPath() + this.httpRequest.getResource());
+				fileInputStream = new FileInputStream(file);
+				DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+				byte bytes[] = new byte[(int) file.length()];
+				dataInputStream.readFully(bytes);
+				
+				PrintStream input = new PrintStream(this.socket.getOutputStream());
+				input.print(this.httpHeaderBuilder.buildHTTP200Header(file));
+				input.write(bytes);
+				input.close();
+				this.socket.close();
+			}
+			catch (IOException e){
+				this.send404Response();
+			} 
+		}
 		catch (IOException e){
 			this.send404Response();
 		} 
+
 	}
 	
-	
-	
-	/**
-	 * 
-	 * @param requiredResource
-	 * @return
-	 */
-	protected String buildHTMLHeader(File requiredResource){
-		MimetypesFileTypeMap mimeTypeMap = new MimetypesFileTypeMap();
-		String header = "HTTP/1.1 200 OK\n";
-		header = header + "Content_type: " + mimeTypeMap.getContentType(requiredResource) + "\n";
-		header = header + "Content_length: " + requiredResource.length() + "\n";
-		header = header + "\n";
-		return header;
-	}
 	
 	
 	/**
@@ -133,12 +153,12 @@ public class HTTPRequestHandler implements Runnable
 	protected void send404Response(){
 		try{
 			PrintStream input = new PrintStream(this.socket.getOutputStream());
-			File file = new File("resources/webappfiles/404.html");
+			File file = new File(TTSServerProperties.getDocumentRoot() + "404.html");
 			FileInputStream fileInputStream = new FileInputStream(file);
 			DataInputStream dataInputStream = new DataInputStream(fileInputStream);
 			byte bytes[] = new byte[(int) file.length()];
 			dataInputStream.readFully(bytes);
-			input.print(this.buildHTML404Header(file));
+			input.print(this.httpHeaderBuilder.buildHTTP404Header(file));
 			input.write(bytes);
 			input.close();
 			this.socket.close();
@@ -148,17 +168,4 @@ public class HTTPRequestHandler implements Runnable
 		}
 	}
 	
-	
-	/**
-	 * 
-	 * @param requiredResource
-	 * @return
-	 */
-	protected String buildHTML404Header(File requiredResource){
-		String header =		"HTTP/1.1 404 NOTFOUND\n";
-		header = header + 	"Content-type: text/html\n";
-		header = header + 	"Content-length: " + requiredResource.length() + "\n";
-		header = header + 	"\n";
-		return header;
-	}	
 }

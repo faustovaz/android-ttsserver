@@ -7,8 +7,10 @@ import br.org.ttsfiler.enumerator.HTTPMethod;
 import br.org.ttsfiler.util.HTTPRequestParser;
 
 /**
- * 
- * @author jefferson.fausto
+ * <b> HTTPRequest </b>
+ * <br/>
+ * A representation of HTTP Request (with Method used, request resource and sent HTTP Headers)	 
+ * @author Fausto Vaz
  *
  */
 public class HTTPRequest 
@@ -21,18 +23,18 @@ public class HTTPRequest
 	
 		
 	/**
-	 * @
-	 * @return
+	 * 
+	 * @return Requested Resource (String)
 	 */
-	public String getResource()
-	{
+	public String getResource()	{
 		return (resource.equals("/")) ? "index.html" : this.resource;
 	}
 	
 	
+	
 	/**
 	 * 
-	 * @return
+	 * @return is HTTP Method GET (Boolean)
 	 */
 	public boolean isGET()
 	{
@@ -40,14 +42,16 @@ public class HTTPRequest
 	}
 	
 	
+	
 	/**
 	 * 
-	 * @return
+	 * @return is HTTP Method POST (Boolean)
 	 */
 	public boolean isPOST()
 	{
 		return this.method == HTTPMethod.POST;
 	}
+	
 	
 	
 	/**
@@ -71,9 +75,9 @@ public class HTTPRequest
 	
 	
 	/**
-	 * 
-	 * @param property
-	 * @param value
+	 * Adds HTTP Header Field and Value
+	 * @param field (String)
+	 * @param value (String)
 	 */
 	public void addHTTPHeaderField(String field, String value){
 		if(this.headers == null)
@@ -85,7 +89,7 @@ public class HTTPRequest
 	/**
 	 * 
 	 * @param name
-	 * @return
+	 * @return The value of the field represented by name (String)
 	 */
 	public String getHTTPHeaderFieldValue(String name){
 		return this.headers.get(name);
@@ -93,15 +97,15 @@ public class HTTPRequest
 	
 	
 	/**
-	 * 
+	 * Load the HTTP Header
 	 * @param header
 	 */
 	public void addHTTPHeader(String header){
-		HTTPRequestParser httpRequestParser = getHTTPRequestParser();
+		HTTPRequestParser httpRequestParser = this.getHTTPRequestParser();
 		httpRequestParser.parseHTTPHeader(header);
 		
-		if(httpRequestParser.isHTTPMethodDescriptor()){ //Load the first line of the message, example: HTTP1.1 /index.hml GET
-			this.setHTTPMethod(httpRequestParser.getMethod());
+		if(httpRequestParser.isHTTPMethodDescriptor()){ 
+			this.setHTTPMethod(httpRequestParser.getHTTPMethod());
 			this.setResource(httpRequestParser.getResource());
 		}
 		else{
@@ -110,6 +114,9 @@ public class HTTPRequest
 	}
 	
 	
+	/**
+	 * @return {@link HTTPRequestParser}
+	 */
 	protected HTTPRequestParser getHTTPRequestParser(){
 		if (this.httpRequestParser == null)
 			this.httpRequestParser = new HTTPRequestParser();
