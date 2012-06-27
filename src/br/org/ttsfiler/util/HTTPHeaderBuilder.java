@@ -4,6 +4,8 @@ import java.io.File;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import br.org.ttsfiler.resource.RequestedResource;
+
 /**
  * <b> HTTPHeaderBuilder </b>
  * <br/>
@@ -13,6 +15,15 @@ import javax.activation.MimetypesFileTypeMap;
  */
 public class HTTPHeaderBuilder {
 
+	
+	public String buildHTTPHeader(RequestedResource resource){
+		MimetypesFileTypeMap mimeTypeMap = new MimetypesFileTypeMap();
+		String header = "HTTP/1.1" +  resource.getHTTPStatusCode() + " " + resource.getHTTPStatusDescription() +"\n";
+		header = header + "Content_type: " + mimeTypeMap.getContentType(resource.getFile()) + "\n";
+		header = header + "Content_length: " + resource.getFile().length() + "\n";
+		header = header + "\n";
+		return header;
+	}
 	
 	
 	/**

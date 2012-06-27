@@ -29,8 +29,6 @@ public class TemplateEngine {
 	 */
 	public TemplateEngine(){
 		this.mimeTypes = new MimetypesFileTypeMap();
-		this.mimeTypes.addMimeTypes("text/html");
-		this.mimeTypes.addMimeTypes("image/jpg");
 		this.templateConfiguration = new Configuration();
 	}
 	
