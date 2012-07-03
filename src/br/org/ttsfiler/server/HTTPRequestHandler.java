@@ -35,7 +35,6 @@ public class HTTPRequestHandler implements Runnable
 	}
 	
 	
-	
 	/**
 	 * 
 	 */
@@ -50,7 +49,6 @@ public class HTTPRequestHandler implements Runnable
 		}
 	}
 
-	
 	
 	/**
 	 * 

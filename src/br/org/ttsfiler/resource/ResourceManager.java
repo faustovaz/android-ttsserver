@@ -3,9 +3,11 @@ package br.org.ttsfiler.resource;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import br.org.ttsfiler.server.HTTPRequest;
 import br.org.ttsfiler.util.TTSServerProperties;
+import br.org.ttsfiler.util.TemplateEngine;
 
 /**
  * <b>ResourceManager</b>
@@ -18,66 +20,65 @@ public class ResourceManager {
 	private File file;
 	private FileInputStream fileInputStream;
 	private DataInputStream dataInputStream;
+	private HTTPRequest httpRequest;
+	private int httpStatusCode;
+	private String httpStatusDescription;
 	
+	
+	/**
+	 * 
+	 * @param httpRequest
+	 * @return
+	 */
 	public RequestedResource getRequestedResource(HTTPRequest httpRequest){
+		this.httpRequest = httpRequest;
+		this.loadFile();
+		this.loadFileInputStream();
+		this.loadDataInputStream();
+		return new RequestedResource(this.file, this.dataInputStream, this.httpStatusCode, this.httpStatusDescription);
+	}
+
 	
-		this.file = new File(TTSServerProperties.getDocumentRoot() +  httpRequest.getResource());
-		if (this.file.exists())
-		
-		
-
-			
-			
-			
-			File file;
-			FileInputStream fileInputStream;
-			try	{
-				file = new File(TTSServerProperties.getDocumentRoot() + this.httpRequest.getResource());
-				fileInputStream = new FileInputStream(file);
-				DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-				byte bytes[] = new byte[(int) file.length()];
-				dataInputStream.readFully(bytes);
-				PrintStream input = new PrintStream(this.socket.getOutputStream());
-				input.print(this.httpHeaderBuilder.buildHTTP200Header(file));
-				input.write(bytes);
-				input.close();
-				this.socket.close();
-			}
-			catch(FileNotFoundException fileNotFound){
-				try{
-					file = new File(TTSServerProperties.uploadedFilesPath() + this.httpRequest.getResource());
-					fileInputStream = new FileInputStream(file);
-					DataInputStream dataInputStream = new DataInputStream(fileInputStream);
-					byte bytes[] = new byte[(int) file.length()];
-					dataInputStream.readFully(bytes);
-					
-					PrintStream input = new PrintStream(this.socket.getOutputStream());
-					input.print(this.httpHeaderBuilder.buildHTTP200Header(file));
-					input.write(bytes);
-					input.close();
-					this.socket.close();
-				}
-				catch (IOException e){
-					this.send404Response();
-				} 
-			}
-			catch (IOException e){
-				this.send404Response();
-			} 
-
+	/**
+	 * 
+	 */
+	protected void loadFile(){
+		getTemplateEngine().generateRequestedResourceFromTemplate(this.httpRequest.getResource());
+		this.file = new File(this.httpRequest.getResource());
+		if(this.file.exists()){
+			this.httpStatusCode = 200;
+			this.httpStatusDescription = "OK";
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		return new RequestedResource();
+		else{
+			this.file = new File(TTSServerProperties.getDocumentRoot()+ "/404.html");
+			this.httpStatusCode = 400;
+			this.httpStatusDescription = "NOT FOUND";
+		}
 	}
 	
 	
+	/**
+	 * 
+	 */
+	protected void loadFileInputStream(){
+		try{
+			this.fileInputStream = new FileInputStream(this.file);
+		}
+		catch(FileNotFoundException fileNotFound){
+			
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	protected void loadDataInputStream(){
+		this.dataInputStream = new DataInputStream(this.fileInputStream);
+	}
+	
+	
+	protected TemplateEngine getTemplateEngine(){
+		return new TemplateEngine();
+	}
+
 }

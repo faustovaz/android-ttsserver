@@ -2,6 +2,7 @@ package br.org.ttsfiler.resource;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.IOException;
 
 public class RequestedResource {
 
@@ -11,10 +12,13 @@ public class RequestedResource {
 	private String httpStatusDescription;
 	
 	
-	public RequestedResource(){
-		
-	}
-	
+	/**
+	 * 
+	 * @param file
+	 * @param dataInputStream
+	 * @param httpStatusCode
+	 * @param httpStatusDescription
+	 */
 	public RequestedResource(File file, DataInputStream dataInputStream, int httpStatusCode, String httpStatusDescription){
 		this.file = file;
 		this.dataInputStream = dataInputStream;
@@ -23,28 +27,54 @@ public class RequestedResource {
 	}
 	
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public File getFile(){
 		return this.file;
 	}
 	
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public DataInputStream getDataInputStream(){
 		return this.dataInputStream;
 	}
 	
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getHTTPStatusCode(){
 		return this.httpStatusCode;
 	}
 	
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getHTTPStatusDescription(){
 		return this.httpStatusDescription;
 	}
 	
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public byte[] getBytesFromResource(){
-		return new byte[3];
+		byte bytes[] = new byte[(int) this.file.length()];
+		try {
+			this.dataInputStream.read(bytes);
+		} 
+		catch (IOException e){
+			System.err.println();
+		}
+		return bytes;
 	}
-	
-	
 }

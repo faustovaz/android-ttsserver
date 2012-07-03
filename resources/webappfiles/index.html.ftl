@@ -24,7 +24,7 @@
 	<a href="404.html">CLica aqui</a>	
 	<div>
 		<#list files as file>
-		<div><a href="${file}">${file}</a></div>
+		<div><a href="download/${file}">${file}</a></div>
 		</#list>
 	</div>
 </body>

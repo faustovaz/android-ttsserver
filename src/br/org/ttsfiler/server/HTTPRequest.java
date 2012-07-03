@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.org.ttsfiler.enumerator.HTTPMethod;
 import br.org.ttsfiler.util.HTTPRequestParser;
+import br.org.ttsfiler.util.TTSServerProperties;
 
 /**
  * <b> HTTPRequest </b>
@@ -27,7 +28,6 @@ public class HTTPRequest
 	 * @return Requested Resource (String)
 	 */
 	public String getResource()	{
-		//return (resource.equals("/")) ? "index.html" : this.resource;
 		return this.resource;
 	}
 	
@@ -61,7 +61,18 @@ public class HTTPRequest
 	 */
 	protected void setResource(String resource)
 	{
-		this.resource = resource;
+		if(resource.equals("/")){
+			this.resource = TTSServerProperties.getDocumentRoot() + "/index.html";
+		}
+		else{
+			String resourceSplitted[] = resource.split("/");
+			if(resourceSplitted[1].equals("download")){
+				this.resource = TTSServerProperties.uploadedFilesPath() + resourceSplitted[2];
+			}
+			else{
+				this.resource = TTSServerProperties.getDocumentRoot() + resource;
+			}
+		}
 	}
 	
 	
