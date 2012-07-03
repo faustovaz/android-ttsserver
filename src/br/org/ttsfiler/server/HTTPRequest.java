@@ -27,7 +27,8 @@ public class HTTPRequest
 	 * @return Requested Resource (String)
 	 */
 	public String getResource()	{
-		return (resource.equals("/")) ? "index.html" : this.resource;
+		//return (resource.equals("/")) ? "index.html" : this.resource;
+		return this.resource;
 	}
 	
 	
