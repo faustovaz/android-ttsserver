@@ -1,6 +1,7 @@
 package br.org.ttsfiler.server;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -70,8 +71,9 @@ public class HTTPRequestHandler implements Runnable
 		BufferedReader reader = new BufferedReader(input);
 		this.httpRequest = new HTTPRequest();
 		String httpHeader;
-		
-		while((httpHeader = reader.readLine()) != null && !httpHeader.equals("")){
+		//!httpHeader.equals("")
+		while((httpHeader = reader.readLine()) != null && reader.ready()){
+			System.out.println(httpHeader);
 			this.httpRequest.addHTTPHeader(httpHeader);
 		}
 	}
@@ -107,9 +109,28 @@ public class HTTPRequestHandler implements Runnable
 	 * 
 	 */
 	protected void processHTTPPostRequest(){
+		String numberOfBytes = this.httpRequest.getHTTPHeaderFieldValue("Content-Length");
 		
+		this.httpRequest.writeAllKeys();
+		
+		try {
+			InputStreamReader reader = new InputStreamReader(this.socket.getInputStream());
+			BufferedReader r = new BufferedReader(reader);
+			while(r.ready()){
+				
+				String s = r.readLine();
+				
+				//char c[] = new char[Integer.valueOf(numberOfBytes)];
+				//r.read(c);
+				System.out.println(s);
+				numberOfBytes = "tts";
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		numberOfBytes = "tts";
 	}
-	
 	
 	/**
 	 * 
