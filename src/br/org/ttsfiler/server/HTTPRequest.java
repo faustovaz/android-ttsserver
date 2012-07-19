@@ -1,9 +1,7 @@
 package br.org.ttsfiler.server;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import br.org.ttsfiler.enumerator.HTTPMethod;
 import br.org.ttsfiler.util.HTTPRequestParser;
@@ -138,11 +136,6 @@ public class HTTPRequest
 	}
 	
 	public void writeAllKeys(){
-		Set<String> s = this.headers.keySet();
-		Iterator it = s.iterator();
-		while(it.hasNext()){
-			String d = (String) it.next();
-			System.out.println(d);
-		}
+
 	}
 }

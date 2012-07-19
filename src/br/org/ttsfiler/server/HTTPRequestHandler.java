@@ -1,9 +1,7 @@
 package br.org.ttsfiler.server;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
@@ -67,14 +65,30 @@ public class HTTPRequestHandler implements Runnable
 	 * @throws IOException
 	 */
 	protected void readHTTPHeaders() throws IOException{
-		InputStreamReader input = new InputStreamReader(socket.getInputStream());
-		BufferedReader reader = new BufferedReader(input);
+		BufferedInputStream reader = new BufferedInputStream(socket.getInputStream());
 		this.httpRequest = new HTTPRequest();
-		String httpHeader;
-		//!httpHeader.equals("")
-		while((httpHeader = reader.readLine()) != null && reader.ready()){
-			System.out.println(httpHeader);
-			this.httpRequest.addHTTPHeader(httpHeader);
+		byte bytesRead[] = new byte[1];
+		byte byteRead;
+		char charRead;
+		String httpHeader = "";
+		
+		while(reader.read(bytesRead) != -1){
+			byteRead = bytesRead[0];
+			charRead = (char) byteRead;
+			if(charRead != '\r'){
+				if(charRead != '\n'){
+					httpHeader = httpHeader + charRead;
+				}
+				else{
+					this.httpRequest.addHTTPHeader(httpHeader);
+					httpHeader = "";
+				}
+			}
+			else{
+				if (httpHeader.equals("")){
+					break;
+				}
+			}
 		}
 	}
 	
@@ -109,27 +123,7 @@ public class HTTPRequestHandler implements Runnable
 	 * 
 	 */
 	protected void processHTTPPostRequest(){
-		String numberOfBytes = this.httpRequest.getHTTPHeaderFieldValue("Content-Length");
-		
-		this.httpRequest.writeAllKeys();
-		
-		try {
-			InputStreamReader reader = new InputStreamReader(this.socket.getInputStream());
-			BufferedReader r = new BufferedReader(reader);
-			while(r.ready()){
-				
-				String s = r.readLine();
-				
-				//char c[] = new char[Integer.valueOf(numberOfBytes)];
-				//r.read(c);
-				System.out.println(s);
-				numberOfBytes = "tts";
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		numberOfBytes = "tts";
+
 	}
 	
 	/**
