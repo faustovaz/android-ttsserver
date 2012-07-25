@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.org.ttsfiler.resource.RequestedResource;
 import br.org.ttsfiler.resource.ResourceManager;
@@ -22,6 +24,7 @@ public class HTTPRequestHandler implements Runnable
 	private Socket socket;
 	private HTTPRequest httpRequest;
 	private HTTPHeaderBuilder httpHeaderBuilder;
+	private BufferedInputStream reader;
 	
 	
 	/**
@@ -65,39 +68,37 @@ public class HTTPRequestHandler implements Runnable
 	 * @throws IOException
 	 */
 	protected void readHTTPHeaders() throws IOException{
-		BufferedInputStream reader = new BufferedInputStream(socket.getInputStream());
+		this.reader = new BufferedInputStream(this.socket.getInputStream());
 		this.httpRequest = new HTTPRequest();
-		byte bytesRead[] = new byte[1];
-		byte byteRead;
+		byte byteRead[] = new byte[1];
 		char charRead;
-		String httpHeader = "";
+		StringBuffer buffer = new StringBuffer();
 		
-		while(reader.read(bytesRead) != -1){
-			byteRead = bytesRead[0];
-			charRead = (char) byteRead;
-			if(charRead != '\r'){
-				if(charRead != '\n'){
-					httpHeader = httpHeader + charRead;
-				}
-				else{
-					this.httpRequest.addHTTPHeader(httpHeader);
-					httpHeader = "";
-				}
-			}
-			else{
-				if (httpHeader.equals("")){
+		while(this.reader.read(byteRead) != -1){
+			charRead = (char) byteRead[0];
+			buffer.append(charRead);
+			if(charRead == '\n'){
+				if(buffer.toString().equals("\r\n")){
 					break;
 				}
+				else{
+					buffer.delete(buffer.length() - 2, buffer.length()); //Delete the last two char in the string: \r\n
+					this.httpRequest.addHTTPHeader(buffer.toString());
+					buffer.delete(0, buffer.length()); //Empty the string of the buffer.
+				}
 			}
+			
 		}
+		
 	}
 	
 	
 	
 	/**
 	 * Handle HTTP and process request depending on HTTP Method
+	 * @throws IOException 
 	 */
-	protected void processHTTPRequest()
+	protected void processHTTPRequest() throws IOException
 	{
 		if(this.httpRequest.isGET()){
 			this.processHTTPGetRequest();
@@ -120,10 +121,30 @@ public class HTTPRequestHandler implements Runnable
 	
 	
 	/**
+	 * @throws IOException 
 	 * 
 	 */
-	protected void processHTTPPostRequest(){
-
+	protected void processHTTPPostRequest() throws IOException{
+		byte byteRead[] = new byte[1];
+		char charRead;
+		StringBuffer buffer = new StringBuffer();
+		List<String> strings = new ArrayList<String>();
+		while(this.reader.read(byteRead) != -1){
+			charRead = (char) byteRead[0];
+			buffer.append(charRead);
+			if(charRead == '\n'){
+				if(buffer.toString().equals("\r\n")){
+					System.out.println("linha em branco");
+				}
+				else{
+					buffer.delete(buffer.length() - 2, buffer.length());
+					strings.add(buffer.toString());
+					buffer.delete(0, buffer.length());
+				}
+			}
+		}
+		
+		String contentLength = this.httpRequest.getHTTPHeaderFieldValue("Content-length");
 	}
 	
 	/**
