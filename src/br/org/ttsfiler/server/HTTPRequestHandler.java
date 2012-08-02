@@ -1,6 +1,7 @@
 package br.org.ttsfiler.server;
 
 import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
@@ -129,22 +130,53 @@ public class HTTPRequestHandler implements Runnable
 		char charRead;
 		StringBuffer buffer = new StringBuffer();
 		List<String> strings = new ArrayList<String>();
+		int length = 0;
 		while(this.reader.read(byteRead) != -1){
 			charRead = (char) byteRead[0];
+			length++;
 			buffer.append(charRead);
 			if(charRead == '\n'){
 				if(buffer.toString().equals("\r\n")){
-					System.out.println("linha em branco");
+					break;
 				}
 				else{
 					buffer.delete(buffer.length() - 2, buffer.length());
+					System.out.println(buffer.toString());
 					strings.add(buffer.toString());
 					buffer.delete(0, buffer.length());
+					System.out.println(buffer.toString());
 				}
 			}
 		}
 		
-		String contentLength = this.httpRequest.getHTTPHeaderFieldValue("Content-length");
+		Integer contentLength = Integer.valueOf(this.httpRequest.getHTTPHeaderFieldValue("Content-Length"));
+		byte byteOfFile[] = new byte[contentLength];
+		byteRead = new byte[1];
+		int i = length;
+		
+		System.out.println("Content-length = " + contentLength);
+		System.out.println("Length = " + length);
+		
+		
+		
+		
+//		while(i < (contentLength - 1)){
+//			byteOfFile[i] = byteRead[0];
+//			i++;
+		//209631184319562528981191723699		
+		
+		while(this.reader.read(byteRead) != -1){
+			System.out.println("Byte = " + (char) byteRead[0] + " TTS = " + byteRead[0]);
+		}
+		
+//		for (int i = 0; i < contentLength - 1 || this.reader.read(byteRead) != -1; i++){
+//			this.reader.read(byteRead);
+//			byteOfFile[i] = byteRead[0];
+//			System.out.println(i);
+//		}
+		FileOutputStream outPut = new FileOutputStream("/home/fausto/teste.jpg");
+		outPut.write(byteOfFile);
+		outPut.close();
 	}
 	
 	/**
