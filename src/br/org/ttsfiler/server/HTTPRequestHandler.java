@@ -157,24 +157,28 @@ public class HTTPRequestHandler implements Runnable
 		System.out.println("Content-length = " + contentLength);
 		System.out.println("Length = " + length);
 		
-		
-		
-		
-//		while(i < (contentLength - 1)){
-//			byteOfFile[i] = byteRead[0];
-//			i++;
-		//209631184319562528981191723699		
-		
+		boolean newLineFound = false;
+		i = 0;
 		while(this.reader.read(byteRead) != -1){
+			if (byteRead[0] == (byte) 10){
+				newLineFound = true;
+			}
+			else{
+				if (byteRead[0] == (byte) 13 && newLineFound){
+					System.out.println("Achei a sequencia, deve ser o fim do arquivo");
+				}
+				else{
+					newLineFound = false;
+				}
+			}
+			i++;
 			System.out.println("Byte = " + (char) byteRead[0] + " TTS = " + byteRead[0]);
+			System.out.println("Total = " + i);
 		}
 		
-//		for (int i = 0; i < contentLength - 1 || this.reader.read(byteRead) != -1; i++){
-//			this.reader.read(byteRead);
-//			byteOfFile[i] = byteRead[0];
-//			System.out.println(i);
-//		}
-		FileOutputStream outPut = new FileOutputStream("/home/fausto/teste.jpg");
+		
+		
+		FileOutputStream outPut = new FileOutputStream("/home/fausto/teste.pdf");
 		outPut.write(byteOfFile);
 		outPut.close();
 	}
