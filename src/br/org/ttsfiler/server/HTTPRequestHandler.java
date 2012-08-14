@@ -172,11 +172,11 @@ public class HTTPRequestHandler implements Runnable
 				}
 			}
 			i++;
-			System.out.println("Byte = " + (char) byteRead[0] + " TTS = " + byteRead[0]);
-			System.out.println("Total = " + i);
+			System.out.println("Byte = " + (char) byteRead[0] + " TTS = " + byteRead[0] + "                       TOTAL = " + i);
+			//System.out.println("Total = " + i);
 		}
 		
-		
+		//TotalDeBytes = ContentLength - lengthOfHeaders - lengthOfFileDelimiter
 		
 		FileOutputStream outPut = new FileOutputStream("/home/fausto/teste.pdf");
 		outPut.write(byteOfFile);
