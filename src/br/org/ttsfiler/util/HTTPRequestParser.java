@@ -25,7 +25,14 @@ public class HTTPRequestParser {
 	 * 	Example of messages:	Host: http://mysite.com:8081
 	 * 							Cache-Control: no-cache
 	 */
-	public static final String REGEX_HTTP_FIELD_AND_VALUE = "([\\w.-]+):\\s*([\\w.=;,*/)(+:\\s-]+)";
+	public static final String REGEX_HTTP_FIELD_AND_VALUE = "([\\w.-]+):\\s*([\\w.=;\",*/)(+:\\s-]+)";
+	
+	/**
+	 * 	Regex used for validating File Boundary (those chars sent when you upload a file using HTTP)
+	 * 	Example of messages:	--------------------2334562452452
+	 * 							--------------------1234567891234
+	 */
+	public static final String REGEX_HTTP_UPLOADED_FILE_BOUNDARY = "-+[0-9]+";
 	
 	
 	private String httpMethod;
@@ -33,14 +40,16 @@ public class HTTPRequestParser {
 	private String field;
 	private String fieldValue;
 	private Boolean isMethodDescriptor = false;
-	private Pattern methodResourcepattern;
+	private Pattern methodResourcePattern;
 	private Pattern httpFieldValuePattern;
+	private Pattern uploadedFileBoundaryPattern;
 	
 	
 	
 	public HTTPRequestParser(){
-		this.methodResourcepattern = Pattern.compile(REGEX_METHOD_AND_RESOURCE_DESCRIPTOR);
+		this.methodResourcePattern = Pattern.compile(REGEX_METHOD_AND_RESOURCE_DESCRIPTOR);
 		this.httpFieldValuePattern = Pattern.compile(REGEX_HTTP_FIELD_AND_VALUE);
+		this.uploadedFileBoundaryPattern = Pattern.compile(REGEX_HTTP_UPLOADED_FILE_BOUNDARY);
 	}
 	
 	
@@ -50,7 +59,7 @@ public class HTTPRequestParser {
 	 * @param header (String)
 	 */
 	public void parseHTTPHeader(String header){
-		Matcher matcher = this.methodResourcepattern.matcher(header);
+		Matcher matcher = this.methodResourcePattern.matcher(header);
 		if(matcher.matches()){
 			this.isMethodDescriptor = true;
 			this.httpMethod = matcher.group(1);
@@ -62,6 +71,14 @@ public class HTTPRequestParser {
 				this.isMethodDescriptor = false;
 				this.field = matcher.group(1);
 				this.fieldValue = matcher.group(2);
+			}
+			else{
+				matcher = this.uploadedFileBoundaryPattern.matcher(header);
+				if (matcher.matches()){
+					this.isMethodDescriptor = false;
+					this.field = "File-Boundary";
+					this.fieldValue = header;
+				}
 			}
 		}
 	}

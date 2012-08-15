@@ -2,6 +2,8 @@ package br.org.ttsfiler.server;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import br.org.ttsfiler.enumerator.HTTPMethod;
 import br.org.ttsfiler.util.HTTPRequestParser;
@@ -135,7 +137,28 @@ public class HTTPRequest
 		return this.httpRequestParser;
 	}
 	
-	public void writeAllKeys(){
-
+	
+	/**
+	 * 
+	 * @return fileName
+	 */
+	public String getUploadedFileName(){
+		String contentDisposition = this.getHTTPHeaderFieldValue("Content-Disposition");
+		if (contentDisposition != null){
+			String properties[] = contentDisposition.split(";");
+			for (String property : properties) {
+				property = property.trim();
+				String regex = "filename=\"([\\w.-]+)\"";
+				Pattern pattern = Pattern.compile(regex); //filename="r.pdf"
+				Matcher matcher = pattern.matcher(property);
+				if(matcher.matches()){
+					return matcher.group(1);
+				}
+			}
+		}
+		return null;
 	}
+	
+	
+	
 }

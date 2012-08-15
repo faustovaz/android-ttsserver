@@ -141,43 +141,32 @@ public class HTTPRequestHandler implements Runnable
 				}
 				else{
 					buffer.delete(buffer.length() - 2, buffer.length());
-					System.out.println(buffer.toString());
-					strings.add(buffer.toString());
+					this.httpRequest.addHTTPHeader(buffer.toString());
 					buffer.delete(0, buffer.length());
-					System.out.println(buffer.toString());
 				}
 			}
 		}
 		
 		Integer contentLength = Integer.valueOf(this.httpRequest.getHTTPHeaderFieldValue("Content-Length"));
-		byte byteOfFile[] = new byte[contentLength];
+		System.out.println(this.httpRequest.getUploadedFileName());
+		byte byteOfFile[] = new byte[524940];
 		byteRead = new byte[1];
 		int i = length;
-		
-		System.out.println("Content-length = " + contentLength);
-		System.out.println("Length = " + length);
-		
 		boolean newLineFound = false;
-		i = 0;
-		while(this.reader.read(byteRead) != -1){
-			if (byteRead[0] == (byte) 10){
-				newLineFound = true;
+		i = 1;
+		while(i < 524940 ){
+			
+			if (this.reader.read(byteRead) == -1){
+				System.out.println("PAAAAUU");
+				break;
 			}
 			else{
-				if (byteRead[0] == (byte) 13 && newLineFound){
-					System.out.println("Achei a sequencia, deve ser o fim do arquivo");
-				}
-				else{
-					newLineFound = false;
-				}
+				byteOfFile[i] = byteRead[0];
 			}
 			i++;
-			System.out.println("Byte = " + (char) byteRead[0] + " TTS = " + byteRead[0] + "                       TOTAL = " + i);
-			//System.out.println("Total = " + i);
 		}
 		
 		//TotalDeBytes = ContentLength - lengthOfHeaders - lengthOfFileDelimiter
-		
 		FileOutputStream outPut = new FileOutputStream("/home/fausto/teste.pdf");
 		outPut.write(byteOfFile);
 		outPut.close();
