@@ -11,6 +11,7 @@ import java.util.List;
 import br.org.ttsfiler.resource.RequestedResource;
 import br.org.ttsfiler.resource.ResourceManager;
 import br.org.ttsfiler.util.HTTPHeaderBuilder;
+import br.org.ttsfiler.util.TTSServerProperties;
 
 /**
  * <b> HTTPRequestHandler </b>
@@ -111,13 +112,18 @@ public class HTTPRequestHandler implements Runnable
 	}
 	
 	
+	protected void sendRequestedResource(){
+		ResourceManager manager = new ResourceManager();
+		RequestedResource requestedResource = manager.getRequestedResource(this.httpRequest);
+		this.sendResponse(requestedResource);
+	}
+	
+	
 	/**
 	 * 
 	 */
 	protected void processHTTPGetRequest(){
-		ResourceManager manager = new ResourceManager();
-		RequestedResource requestedResource = manager.getRequestedResource(this.httpRequest);
-		this.sendResponse(requestedResource);
+		this.sendRequestedResource();
 	}
 	
 	
@@ -128,34 +134,35 @@ public class HTTPRequestHandler implements Runnable
 	protected void processHTTPPostRequest() throws IOException{
 		byte byteRead[] = new byte[1];
 		char charRead;
+		int numberOfBytesRead = 0;
 		StringBuffer buffer = new StringBuffer();
-		List<String> strings = new ArrayList<String>();
-		int length = 0;
+		
 		while(this.reader.read(byteRead) != -1){
 			charRead = (char) byteRead[0];
-			length++;
 			buffer.append(charRead);
+			numberOfBytesRead++;
 			if(charRead == '\n'){
 				if(buffer.toString().equals("\r\n")){
 					break;
 				}
 				else{
 					buffer.delete(buffer.length() - 2, buffer.length());
+					System.out.println(buffer.toString());
 					this.httpRequest.addHTTPHeader(buffer.toString());
 					buffer.delete(0, buffer.length());
 				}
 			}
 		}
 		
+		
 		Integer contentLength = Integer.valueOf(this.httpRequest.getHTTPHeaderFieldValue("Content-Length"));
-		System.out.println(this.httpRequest.getUploadedFileName());
-		byte byteOfFile[] = new byte[524940];
+		String fileBoundary = this.httpRequest.getHTTPHeaderFieldValue("File-Boundary");
+		Integer totalOfBytesToBeRead = contentLength - numberOfBytesRead - fileBoundary.length() - 6;
+		
+		byte byteOfFile[] = new byte[totalOfBytesToBeRead];
 		byteRead = new byte[1];
-		int i = length;
-		boolean newLineFound = false;
-		i = 1;
-		while(i < 524940 ){
-			
+		int i = 0;
+		while(totalOfBytesToBeRead > 0 ){
 			if (this.reader.read(byteRead) == -1){
 				System.out.println("PAAAAUU");
 				break;
@@ -164,13 +171,14 @@ public class HTTPRequestHandler implements Runnable
 				byteOfFile[i] = byteRead[0];
 			}
 			i++;
+			totalOfBytesToBeRead--;
 		}
-		
-		//TotalDeBytes = ContentLength - lengthOfHeaders - lengthOfFileDelimiter
-		FileOutputStream outPut = new FileOutputStream("/home/fausto/teste.pdf");
+		FileOutputStream outPut = new FileOutputStream(TTSServerProperties.uploadedFilesPath() + "/" + this.httpRequest.getUploadedFileName());
 		outPut.write(byteOfFile);
 		outPut.close();
+		this.sendRequestedResource();
 	}
+	
 	
 	/**
 	 * 

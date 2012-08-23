@@ -2,6 +2,7 @@ package br.org.ttsfiler.server;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,9 +68,9 @@ public class HTTPRequest
 			this.resource = TTSServerProperties.getDocumentRoot() + "/index.html";
 		}
 		else{
-			String resourceSplitted[] = resource.split("/");
+			String resourceSplitted[] = resource.split("/"); //Example of expected resource download/file
 			if(resourceSplitted[1].equals("download")){
-				this.resource = TTSServerProperties.uploadedFilesPath() + resourceSplitted[2];
+				this.resource = TTSServerProperties.uploadedFilesPath() + "/" + resourceSplitted[2];
 			}
 			else{
 				this.resource = TTSServerProperties.getDocumentRoot() + resource;
@@ -145,12 +146,13 @@ public class HTTPRequest
 	public String getUploadedFileName(){
 		String contentDisposition = this.getHTTPHeaderFieldValue("Content-Disposition");
 		if (contentDisposition != null){
+			String regex = "filename=\"([\\w.-]+)\"";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher;
 			String properties[] = contentDisposition.split(";");
 			for (String property : properties) {
 				property = property.trim();
-				String regex = "filename=\"([\\w.-]+)\"";
-				Pattern pattern = Pattern.compile(regex); //filename="r.pdf"
-				Matcher matcher = pattern.matcher(property);
+				matcher = pattern.matcher(property);
 				if(matcher.matches()){
 					return matcher.group(1);
 				}
@@ -158,7 +160,5 @@ public class HTTPRequest
 		}
 		return null;
 	}
-	
-	
 	
 }
