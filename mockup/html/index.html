@@ -1,0 +1,83 @@
+<html>
+<head>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+		}
+		div#main{
+			background-image: url('img/slice_3.png');
+			background-repeat: repeat-x;
+			width: 100%;
+			min-height: 600px;
+		}
+		div#fork-me{
+			float: right;
+		}
+		div#upload-files{
+			float: left;
+			border: 2px solid #007200;
+			min-height: 200px;
+			min-width: 40%;
+			margin-left: 30%;
+			margin-top: 3%;
+			-webkit-border-radius: 5px;
+    		-moz-border-radius: 5px;
+    		border-radius: 5px;	
+    		background-color: #ffffff;
+		}
+		div#upload-files-text{
+			font-family: Consolas;
+			color: #009000;
+			margin: 8% 0 12% 12%;
+			float: left;
+			font-size: 26px;
+		}
+		div#upload-files-holder-button{
+			float: right;
+			margin-top: 10%;
+			margin-right: 8%;
+		}
+		button#upload-files-button{
+			padding: 12%;
+			background-image: url('img/slice_button.png');
+			background-repeat: repeat-x;
+			color: #FFFFFF;
+			font-family: Consolas;
+			font-size: 16px;
+			-webkit-border-radius: 5px;
+    		-moz-border-radius: 5px;
+    		border-radius: 5px;	
+    		min-width: 155px;			
+		}
+		div#files{
+			margin-left: 25%;
+			margin-top: 2%;
+			min-width: 45%;
+			min-height: 100px;
+			float: left;
+		}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<div id="fork-me">
+			<img src="img/fork-me.png" />
+		</div>
+		<div id="upload-files">
+			<div id="upload-files-text">
+				<!-- Arraste seus</br>arquivos aqui</br>ou selecione-os -->
+				Drag n' drop</br>your files here</br>or select them
+			</div>
+			<div id="upload-files-holder-button">	
+				<button id="upload-files-button">
+					Selecione-os
+					<!-- Select them -->
+				</button>
+			</div>
+		</div>
+		<div id="files">
+		</div>
+	</div>
+</body>
+</html>
