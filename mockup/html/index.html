@@ -57,6 +57,36 @@
 			min-height: 100px;
 			float: left;
 		}
+		ul#file_list{
+			list-style-type: none;
+			color: #0e2bdd;
+			font-size: 12pt;
+			font-family: Consolas;
+			font-weight: bold;
+			width: 100%;
+		}
+		ul#file_list li{
+			width: 100%;
+			border-bottom: 1px solid #0e2bdd;
+			padding: 1%;
+			margin-bottom: 5px;
+		}
+		a.download-button{
+			background-image: url('img/slice_button_download.png');
+			background-repeat: repeat-x;
+			font-family: Consolas;
+			color: #FFFFFF;
+			padding: 1% 2% 1% 2%;
+			-webkit-border-radius: 5px;
+    		-moz-border-radius: 5px;
+    		border-radius: 5px;		
+    		font-weight: normal;
+    		margin-bottom: 10%;
+		}
+		div.file-name{
+			float:left;
+		}
+
 	</style>
 </head>
 <body>
@@ -66,8 +96,8 @@
 		</div>
 		<div id="upload-files">
 			<div id="upload-files-text">
-				<!-- Arraste seus</br>arquivos aqui</br>ou selecione-os -->
-				Drag n' drop</br>your files here</br>or select them
+				Arraste seus</br>arquivos aqui</br>ou selecione-os
+				<!-- Drag n' drop</br>your files here</br>or select them -->
 			</div>
 			<div id="upload-files-holder-button">	
 				<button id="upload-files-button">
@@ -77,6 +107,26 @@
 			</div>
 		</div>
 		<div id="files">
+			<ul id="file_list">	
+				<li>
+					<a href="#" class="download-button">Download</a>
+				</li>
+				<li>
+					<a href="#" class="download-button">Download</a>
+				</li>
+				<li>
+					<a href="#" class="download-button">Download</a>
+				</li>
+				<li>
+					<a href="#" class="download-button">Download</a>
+				</li>
+				<li>
+					<a href="#" class="download-button">Download</a>
+				</li>
+				<li>
+					<a href="#" class="download-button">Download</a>
+				</li>																				
+			</ul>
 		</div>
 	</div>
 </body>
