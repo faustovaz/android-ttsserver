@@ -101,7 +101,7 @@ div.file-image{
 
 div.file-name{
 	float:left;
-	width: 60%;
+	width: 65%;
 	text-align: left;
 	min-height: 32px;
 	line-height: 32px;
@@ -109,9 +109,27 @@ div.file-name{
 }
 
 div.file-size{
-	float:right;
+	float:left;
 	width: 10%;
 	text-align: right;
 	min-height: 32px;
 	line-height: 32px;
 }
+
+
+div.file-download{
+	height: 24px;
+	float: right;
+	line-height: 24px;
+	padding: 1px;
+	background-color: #B94A48;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
+	padding: 2px;
+	font-size: 14px;
+	font-family: Consolas;
+	color: #FFFFFF;
+
+}
+
