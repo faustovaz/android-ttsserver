@@ -11,7 +11,6 @@ div#main{
 }
 
 div#content{
-	border: 1px solid #FF0000;
 	overflow: hidden;
 }
 
@@ -36,7 +35,8 @@ div#upload-files{
 
 div#upload-files-text{
 	font-family: Consolas;
-	color: #009000;
+	/*color: #009000;*/
+	color: #007200;
 	margin: 8% 0 12% 12%;
 	float: left;
 	font-size: 16pt;
@@ -65,34 +65,53 @@ div#files{
 	min-width: 50%;
 	margin: 10% 25% 0 25%;
 	float: left;
-	border: 1px solid #FF0000;
 }
 
 ul#file-list{
 	list-style-type: none;
-	color: #009000;
+	color: #007200;
+	font-weight: lighter;
 	font-size: 10pt;
-	font-family: monospace;
+	font-family: "monospace";
 	padding: 0px;
 	margin: 0px;
 	width: 100%
 }
 
 ul#file-list li{
-	border-bottom: 1px solid #007200;
+	/*border-bottom: 1px solid #007200;*/
+	border-bottom: 1px solid #6f766f;
 	margin-bottom: 18px;
 	width: 100%;
 	overflow: hidden;
+	display: table;
+
+}
+
+div.file-parent{
+	display: table;
+	width: 100%
+}
+
+div.file-image{
+	float: left;
+	min-height: 32px;
+	vertical-align: bottom;
 }
 
 div.file-name{
 	float:left;
 	width: 60%;
 	text-align: left;
+	min-height: 32px;
+	line-height: 32px;
+
 }
 
 div.file-size{
 	float:right;
 	width: 10%;
 	text-align: right;
+	min-height: 32px;
+	line-height: 32px;
 }
