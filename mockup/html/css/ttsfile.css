@@ -10,6 +10,11 @@ div#main{
 	min-height: 600px;
 }
 
+div#content{
+	border: 1px solid #FF0000;
+	overflow: hidden;
+}
+
 div#fork-me{
 	float: right;
 }
@@ -18,13 +23,15 @@ div#upload-files{
 	float: left;
 	border: 2px solid #007200;
 	min-height: 200px;
-	min-width: 500px;
-	margin-left: 30%;
+	min-width: 40%;
+	 margin-left: 30%;
+	 margin-right: 30%;
 	margin-top: 3%;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;	
 	background-color: #ffffff;
+	position: absolute;
 }
 
 div#upload-files-text{
@@ -32,7 +39,7 @@ div#upload-files-text{
 	color: #009000;
 	margin: 8% 0 12% 12%;
 	float: left;
-	font-size: 20pt;
+	font-size: 16pt;
 }
 
 div#upload-files-holder-button{
@@ -42,7 +49,7 @@ div#upload-files-holder-button{
 }
 
 button#upload-files-button{
-	padding: 12%;
+	padding: 10%;
 	background-image: url('../img/slice_button.png');
 	background-repeat: repeat-x;
 	color: #FFFFFF;
@@ -55,11 +62,10 @@ button#upload-files-button{
 }
 
 div#files{
-	margin-left: 25%;
-	margin-top: 2%;
 	min-width: 50%;
-	min-height: 100px;
+	margin: 10% 25% 0 25%;
 	float: left;
+	border: 1px solid #FF0000;
 }
 
 ul#file-list{
@@ -69,41 +75,24 @@ ul#file-list{
 	font-family: monospace;
 	padding: 0px;
 	margin: 0px;
-	overflow: auto;
+	width: 100%
 }
 
 ul#file-list li{
 	border-bottom: 1px solid #007200;
 	margin-bottom: 18px;
 	width: 100%;
-	overflow: auto;
-}
-
-a.download-button{
-	background-image: url('img/slice_button_download.png');
-	background-repeat: repeat-x;
-	font-family: Consolas;
-	color: #FFFFFF;
-	padding: 1% 2% 1% 2%;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;		
-	font-weight: normal;
-    margin-bottom: 10%;
+	overflow: hidden;
 }
 
 div.file-name{
 	float:left;
-	width: 70%;
+	width: 60%;
+	text-align: left;
 }
 
 div.file-size{
-	float:left;
-	width: 20%;
-}
-
-div.file-link-to-download{
 	float:right;
-	width: 6%;
+	width: 10%;
 	text-align: right;
 }
