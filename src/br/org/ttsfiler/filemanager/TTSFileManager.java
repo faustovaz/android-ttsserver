@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.org.ttsfiler.util.TTSFileEntity;
 import br.org.ttsfiler.util.TTSServerProperties;
 
 /**
@@ -20,13 +21,16 @@ public class TTSFileManager {
 	 * Get all files uploaded (files that is in) to the application directory.
 	 * @return List<String>
 	 */
-	public List<String> getUploadedFiles(){
+	public List<TTSFileEntity> getUploadedFiles(){
 		File uploadedFilesPath = new File(TTSServerProperties.uploadedFilesPath());
-		List<String> list = new ArrayList<String>();
+		List<TTSFileEntity> list = new ArrayList<TTSFileEntity>();
 		if(uploadedFilesPath.isDirectory()){
 			File filesInPath[] = uploadedFilesPath.listFiles();
 			for (File file : filesInPath) {
-				list.add(file.getName());
+				TTSFileEntity ttsFileEntity = new TTSFileEntity();
+				ttsFileEntity.setName(file.getName());
+				ttsFileEntity.setSize(file.length());
+				list.add(ttsFileEntity);
 			}
 		}
 		return list;

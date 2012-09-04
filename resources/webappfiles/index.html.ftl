@@ -1,30 +1,39 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<title>TTSlabs - PenMob</title>
+	<title>TTS::Gah-veta</title>
+	<link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
 <body>
-	<form action="index.html" method="post" enctype="multipart/form-data">
-		<fieldset>
-		<label>Arquivo:</label>
-		<input type="file" id="arquivo" name="arquivoName"/>
-		<input type="submit" id="button" value="ok">
-		</fieldset>
-	</form>
-	<div>
-		<?devicefiles?>
-	</div>
-	<form action="index.html" method="post">
-		<input type="submit" value="Send" name="btnSend" id="btnSend"/>
-		<input type="hidden" value="Value1" name="hidden1" id="hidden1"/>
-		<input type="hidden" value="Value2" name="hidden2" id="hidden2"/>
-	</form>
-	<a href="404.html">CLica aqui</a>	
-	<div>
-		<#list files as file>
-		<div><a href="download/${file}">${file}</a></div>
-		</#list>
+	<div id="main">
+		<div id="content">
+			<div id="fork-me">
+				<img src="img/fork-me.png" />
+			</div>
+			<div id="upload-files">
+				<div id="upload-files-text">
+					Arraste seus</br>arquivos aqui</br>ou selecione-os
+					<!-- Drag n' drop</br>your files here</br>or select them -->
+				</div>
+				<div id="upload-files-holder-button">	
+					<button id="upload-files-button">
+						Selecione-os
+						<!-- Select them -->
+					</button>
+				</div>
+			</div>
+			<div id="files">
+				<ul id="file-list">	
+					<#list files as file>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">${file.name}</div>
+						<div class="file-size">${file.normalizedSize}</div>
+						<div class="file-download"><a href='download/${file.name}'>Download</a></div>
+					</li>
+					</#list>															
+				</ul>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

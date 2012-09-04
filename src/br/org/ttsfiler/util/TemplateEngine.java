@@ -58,19 +58,18 @@ public class TemplateEngine {
 			Template template = this.templateConfiguration.getTemplate(templateName);
 			TTSFileManager fileManager = new TTSFileManager();
 			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("files", fileManager.getUploadedFiles());
 			File f = new File(requestedResource);
 			Writer out = new PrintWriter(f);
 			try {
 				template.process(map, out);
 			} catch (TemplateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 		} 
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

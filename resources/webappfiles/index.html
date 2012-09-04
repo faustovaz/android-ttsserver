@@ -1,35 +1,79 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<title>TTSlabs - PenMob</title>
+	<title>TTS::Gah-veta</title>
+	<link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
 <body>
-	<form action="index.html" method="post" enctype="multipart/form-data">
-		<fieldset>
-		<label>Arquivo:</label>
-		<input type="file" id="arquivo" name="arquivoName"/>
-		<input type="submit" id="button" value="ok">
-		</fieldset>
-	</form>
-	<div>
-		<?devicefiles?>
-	</div>
-	<form action="index.html" method="post">
-		<input type="submit" value="Send" name="btnSend" id="btnSend"/>
-		<input type="hidden" value="Value1" name="hidden1" id="hidden1"/>
-		<input type="hidden" value="Value2" name="hidden2" id="hidden2"/>
-	</form>
-	<a href="404.html">CLica aqui</a>	
-	<div>
-				<div><a href="download/Red_Hook_Ramblers_-_12_-_Aint_Gonna_Give_Jelly_Roll.mp3">Red_Hook_Ramblers_-_12_-_Aint_Gonna_Give_Jelly_Roll.mp3</a></div>
-		<div><a href="download/CV_Cristiana_Matias.pdf">CV_Cristiana_Matias.pdf</a></div>
-		<div><a href="download/justOneMusic.mp3">justOneMusic.mp3</a></div>
-		<div><a href="download/Red_Hook_Ramblers_-_09_-_banter.mp3">Red_Hook_Ramblers_-_09_-_banter.mp3</a></div>
-		<div><a href="download/canivete-shell.pdf">canivete-shell.pdf</a></div>
-		<div><a href="download/myProgram.py">myProgram.py</a></div>
-		<div><a href="download/tts.py">tts.py</a></div>
-		<div><a href="download/apostila-introducao-shell.pdf">apostila-introducao-shell.pdf</a></div>
+	<div id="main">
+		<div id="content">
+			<div id="fork-me">
+				<img src="img/fork-me.png" />
+			</div>
+			<div id="upload-files">
+				<div id="upload-files-text">
+					Arraste seus</br>arquivos aqui</br>ou selecione-os
+					<!-- Drag n' drop</br>your files here</br>or select them -->
+				</div>
+				<div id="upload-files-holder-button">	
+					<button id="upload-files-button">
+						Selecione-os
+						<!-- Select them -->
+					</button>
+				</div>
+			</div>
+			<div id="files">
+				<ul id="file-list">	
+										<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">Red_Hook_Ramblers_-_12_-_Aint_Gonna_Give_Jelly_Roll.mp3</div>
+						<div class="file-size">7MB</div>
+						<div class="file-download"><a href='download/Red_Hook_Ramblers_-_12_-_Aint_Gonna_Give_Jelly_Roll.mp3'>Download</a></div>
+					</li>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">CV_Cristiana_Matias.pdf</div>
+						<div class="file-size">57KB</div>
+						<div class="file-download"><a href='download/CV_Cristiana_Matias.pdf'>Download</a></div>
+					</li>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">justOneMusic.mp3</div>
+						<div class="file-size">0KB</div>
+						<div class="file-download"><a href='download/justOneMusic.mp3'>Download</a></div>
+					</li>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">Red_Hook_Ramblers_-_09_-_banter.mp3</div>
+						<div class="file-size">2MB</div>
+						<div class="file-download"><a href='download/Red_Hook_Ramblers_-_09_-_banter.mp3'>Download</a></div>
+					</li>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">canivete-shell.pdf</div>
+						<div class="file-size">168KB</div>
+						<div class="file-download"><a href='download/canivete-shell.pdf'>Download</a></div>
+					</li>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">myProgram.py</div>
+						<div class="file-size">0KB</div>
+						<div class="file-download"><a href='download/myProgram.py'>Download</a></div>
+					</li>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">tts.py</div>
+						<div class="file-size">0KB</div>
+						<div class="file-download"><a href='download/tts.py'>Download</a></div>
+					</li>
+					<li>
+						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-name">apostila-introducao-shell.pdf</div>
+						<div class="file-size">316KB</div>
+						<div class="file-download"><a href='download/apostila-introducao-shell.pdf'>Download</a></div>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

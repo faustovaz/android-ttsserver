@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 import br.org.ttsfiler.resource.RequestedResource;
 import br.org.ttsfiler.resource.ResourceManager;
