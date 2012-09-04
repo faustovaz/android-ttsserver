@@ -8,6 +8,7 @@ div#main{
 	background-repeat: repeat-x;
 	width: 100%;
 	min-height: 600px;
+	min-width: 982px;
 }
 
 div#content{
@@ -15,27 +16,21 @@ div#content{
 }
 
 div#fork-me{
-	float: right;
+	float:right;
 }
 
 div#upload-files{
-	float: left;
 	border: 2px solid #007200;
 	min-height: 200px;
 	min-width: 40%;
-	 margin-left: 30%;
-	 margin-right: 30%;
-	margin-top: 3%;
+	margin: 3% 30% 0 30%;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
-	border-radius: 5px;	
-	background-color: #ffffff;
-	position: absolute;
+	border-radius: 10px;
 }
 
 div#upload-files-text{
-	font-family: Consolas;
-	/*color: #009000;*/
+	font-family: "Consolas";
 	color: #007200;
 	margin: 8% 0 12% 12%;
 	float: left;
@@ -53,7 +48,7 @@ button#upload-files-button{
 	background-image: url('../img/slice_button.png');
 	background-repeat: repeat-x;
 	color: #FFFFFF;
-	font-family: Consolas;
+	font-family: "Consolas";
 	font-size: 16px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -63,7 +58,7 @@ button#upload-files-button{
 
 div#files{
 	min-width: 50%;
-	margin: 10% 25% 0 25%;
+	margin: 2% 25% 0 25%;
 	float: left;
 }
 
@@ -79,18 +74,12 @@ ul#file-list{
 }
 
 ul#file-list li{
-	/*border-bottom: 1px solid #007200;*/
 	border-bottom: 1px solid #6f766f;
 	margin-bottom: 18px;
 	width: 100%;
 	overflow: hidden;
 	display: table;
 
-}
-
-div.file-parent{
-	display: table;
-	width: 100%
 }
 
 div.file-image{
@@ -105,7 +94,6 @@ div.file-name{
 	text-align: left;
 	min-height: 32px;
 	line-height: 32px;
-
 }
 
 div.file-size{
@@ -115,7 +103,6 @@ div.file-size{
 	min-height: 32px;
 	line-height: 32px;
 }
-
 
 div.file-download{
 	height: 24px;
@@ -130,6 +117,4 @@ div.file-download{
 	font-size: 14px;
 	font-family: Consolas;
 	color: #FFFFFF;
-
 }
-
