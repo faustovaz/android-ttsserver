@@ -7,8 +7,8 @@ div#main{
 	background-image: url('../img/slice_3.png');
 	background-repeat: repeat-x;
 	width: 100%;
-	min-height: 600px;
-	min-width: 982px;
+	min-height: 768px;
+	min-width: 1024px;
 }
 
 div#content{
@@ -27,6 +27,7 @@ div#upload-files{
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 10px;
+	background-color: #FFFFFF;
 }
 
 div#upload-files-text{
@@ -65,8 +66,7 @@ div#files{
 ul#file-list{
 	list-style-type: none;
 	color: #007200;
-	font-weight: lighter;
-	font-size: 10pt;
+	font-size: 10px;
 	font-family: "monospace";
 	padding: 0px;
 	margin: 0px;
@@ -75,11 +75,14 @@ ul#file-list{
 
 ul#file-list li{
 	border-bottom: 1px solid #6f766f;
-	margin-bottom: 18px;
+	padding: 9px 0 0px 0;
 	width: 100%;
 	overflow: hidden;
 	display: table;
+}
 
+ul#file-list li:hover{
+	background-color: #EAEEF4;
 }
 
 div.file-image{
@@ -90,18 +93,20 @@ div.file-image{
 
 div.file-name{
 	float:left;
-	width: 65%;
+	width: 70%;
 	text-align: left;
 	min-height: 32px;
-	line-height: 32px;
+	line-height: 30px;
+	display: table-cell;
+	vertical-align: bottom;
 }
 
 div.file-size{
 	float:left;
-	width: 10%;
+	width: 8%;
 	text-align: right;
 	min-height: 32px;
-	line-height: 32px;
+	line-height: 30px;
 }
 
 div.file-download{
@@ -117,4 +122,5 @@ div.file-download{
 	font-size: 14px;
 	font-family: Consolas;
 	color: #FFFFFF;
+	cursor: pointer;
 }
