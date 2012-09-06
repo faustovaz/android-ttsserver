@@ -25,7 +25,7 @@
 				<ul id="file-list">	
 					<#list files as file>
 					<li>
-						<div class="file-image"><img src="img/file_extension_pdf.png"/></div>
+						<div class="file-image"><img src="img/${file.extension}.png"/></div>
 						<div class="file-name">${file.name}</div>
 						<div class="file-size">${file.normalizedSize}</div>
 						<div class="file-download"><a href='download/${file.name}'>Download</a></div>
