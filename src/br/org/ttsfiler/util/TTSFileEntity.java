@@ -9,13 +9,15 @@ public class TTSFileEntity {
 	
 	public String name;
 	public long size;
-	public String normalizedSize;
 	public String extension;
+	public String normalizedSize;
+	public String normalizedFileName;
 
 	
 	public void setName(String name){
 		this.name = name;
 		this.setExtension();
+		this.setNormalizedFileName();
 	}
 	
 	
@@ -23,6 +25,15 @@ public class TTSFileEntity {
 		String nameParts[] = this.name.split("\\.");
 		int lastIndex = nameParts.length - 1;
 		this.extension = nameParts[lastIndex];
+	}
+	
+	protected void setNormalizedFileName(){
+		if(this.name.length() > 70){
+			this.normalizedFileName = this.name.substring(0,70) + "...";
+		}
+		else{
+			this.normalizedFileName = this.name;
+		}
 	}
 	
 	public void setSize(long size){
@@ -60,5 +71,10 @@ public class TTSFileEntity {
 	
 	public String getExtension(){
 		return this.extension;
+	}
+	
+	
+	public String getNormalizedFileName(){
+		return this.normalizedFileName;
 	}
 }
