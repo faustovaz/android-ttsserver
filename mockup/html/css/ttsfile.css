@@ -44,8 +44,9 @@ div#upload-files-holder-button{
 	margin-right: 8%;
 }
 
-button#upload-files-button{
-	padding: 10%;
+div#upload-files-button{
+	position: relative;
+	padding: 10% 5% 10% 5%;
 	background-image: url('../img/slice_button.png');
 	background-repeat: repeat-x;
 	color: #FFFFFF;
@@ -55,7 +56,24 @@ button#upload-files-button{
 	-moz-border-radius: 5px;
 	border-radius: 5px;	
     min-width: 155px;			
+    text-align: center;
+    overflow: hidden;
 }
+
+div#upload-files-button input{
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	border
+	padding: 10px;
+	direction: ltr;
+	border: solid 3px;
+  	height: 100%;
+  	width: 100%;
+  	font-size: 30px;
+  	opacity: 0;
+ }
 
 div#files{
 	min-width: 50%;
@@ -123,4 +141,24 @@ div.file-download{
 	font-family: Consolas;
 	color: #FFFFFF;
 	cursor: pointer;
+}
+
+div#show-files-to-upload{
+	position: absolute;
+	width: 60%;
+	left: 20%;
+	top: 15%;
+	border: 2px solid #007200;
+	min-height: 300px;
+	background-color: #FFFFFF;
+	display:block;
+	padding: 0px 15px 0px 15px;
+}
+
+.display-on{
+	display: block;
+}
+
+.display-off{
+	display: none;
 }

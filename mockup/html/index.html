@@ -1,6 +1,8 @@
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="css/ttsfile.css">
+	<script src="http:////ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	<script src="js/tts.js"></script>
 </head>
 <body>
 	<div id="main">
@@ -14,10 +16,10 @@
 					<!-- Drag n' drop</br>your files here</br>or select them -->
 				</div>
 				<div id="upload-files-holder-button">	
-					<button id="upload-files-button">
+					<div id="upload-files-button">
 						Selecione-os
-						<!-- Select them -->
-					</button>
+						<input type='file' name='files[]' multiple value=""/>
+					</div>
 				</div>
 			</div>
 			<div id="files">
@@ -49,6 +51,23 @@
 				</ul>
 			</div>
 		</div>
+	</div>
+	<div id="show-files-to-upload">
+			<h3 style="width:100%; background-color:#EAEEF4; color: #007200">Arquivos selecionados</h3>
+				<ul id="file-list">	
+					<li>
+						<div class="file-image"><img src="img/unknown.png" /></div>
+						<div class="file-name">Seth God - Linchpin.pdf</div>
+						<div class="file-size">2.4MB</div>
+						<div class="file-download">Download</div>
+					</li>		
+					<li>
+						<div class="file-image"><img src="img/unknown.png" /></div>
+						<div class="file-name">Mark Pilgrin - Dive into python 3.pdf</div>
+						<div class="file-size">7.5MB</div>
+						<div class="file-download">Download</div>						
+					</li>																		
+				</ul>
 	</div>
 </body>
 </html>
