@@ -4,11 +4,13 @@ body{
 }
 
 div#main{
+	position: relative;
 	background-image: url('../img/slice_3.png');
 	background-repeat: repeat-x;
 	width: 100%;
 	min-height: 768px;
 	min-width: 1024px;
+	z-index: 0;
 }
 
 div#content{
@@ -153,6 +155,10 @@ div#show-files-to-upload{
 	background-color: #FFFFFF;
 	display:block;
 	padding: 0px 15px 0px 15px;
+	z-index: 2;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
 }
 
 .display-on{
@@ -161,4 +167,16 @@ div#show-files-to-upload{
 
 .display-off{
 	display: none;
+	background-repeat: repeat-x;
+}
+
+div#show-files-to-upload-background{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+	background-image: url('../img/shadow-square.png');
+	background-repeat: repeat;
 }
