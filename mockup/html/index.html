@@ -18,12 +18,12 @@
 				<div id="upload-files-holder-button">	
 					<div id="upload-files-button">
 						Selecione-os
-						<input type='file' name='files[]' multiple value=""/>
+						<input type='file' name='files[]' multiple id='input-file'/>
 					</div>
 				</div>
 			</div>
 			<div id="files">
-				<ul id="file-list">	
+				<ul class="file-list">	
 					<li>
 						<div class="file-image"><img src="img/file_extension_pdf.png" /></div>
 						<div class="file-name">Seth God - Linchpin.pdf</div>
@@ -53,11 +53,11 @@
 		</div>
 	</div>
 	<div id="show-files-to-upload">
-		<div style="width: 100%; background-color: #FF0000">
-			<div style="float:left">Arquivos selecionados</div>
-			<div style="float:right">X</div>
-		</div>	
-		<ul id="file-list">	
+		<div id='show-files-to-upload-title-bar'>
+			<div id='show-files-to-upload-title'>Arquivos selecionados</div>
+			<div id='show-files-to-upload-title-close'>[X]</div>
+		</div>
+		<ul class="file-list" id="list-selected-files">	
 			<li>
 				<div class="file-image"><img src="img/unknown.png" /></div>
 				<div class="file-name">Seth God - Linchpin.pdf</div>

@@ -44,6 +44,7 @@ div#upload-files-holder-button{
 	float: right;
 	margin-top: 10%;
 	margin-right: 8%;
+	cursor: pointer;
 }
 
 div#upload-files-button{
@@ -60,21 +61,19 @@ div#upload-files-button{
     min-width: 155px;			
     text-align: center;
     overflow: hidden;
+    cursor: pointer;
 }
 
 div#upload-files-button input{
 	position: absolute;
-	left: 0;
-	right: 0;
+	left: -520;
 	top: 0;
-	border
 	padding: 10px;
 	direction: ltr;
-	border: solid 3px;
   	height: 100%;
-  	width: 100%;
-  	font-size: 30px;
-  	opacity: 0;
+  	/*opacity: 0;*/
+  	cursor: pointer;
+ 	font-size: 40px;
  }
 
 div#files{
@@ -83,7 +82,7 @@ div#files{
 	float: left;
 }
 
-ul#file-list{
+ul.file-list{
 	list-style-type: none;
 	color: #007200;
 	font-size: 10px;
@@ -93,7 +92,7 @@ ul#file-list{
 	width: 100%
 }
 
-ul#file-list li{
+ul.file-list li{
 	border-bottom: 1px solid #6f766f;
 	padding: 9px 0 0px 0;
 	width: 100%;
@@ -101,7 +100,7 @@ ul#file-list li{
 	display: table;
 }
 
-ul#file-list li:hover{
+ul.file-list li:hover{
 	background-color: #EAEEF4;
 }
 
@@ -153,7 +152,6 @@ div#show-files-to-upload{
 	border: 2px solid #007200;
 	min-height: 300px;
 	background-color: #FFFFFF;
-	display:block;
 	padding: 0px 15px 0px 15px;
 	z-index: 2;
 	-webkit-border-radius: 5px;
@@ -167,7 +165,6 @@ div#show-files-to-upload{
 
 .display-off{
 	display: none;
-	background-repeat: repeat-x;
 }
 
 div#show-files-to-upload-background{
@@ -179,4 +176,24 @@ div#show-files-to-upload-background{
 	z-index: 1;
 	background-image: url('../img/shadow-square.png');
 	background-repeat: repeat;
+	overflow: hidden;
+}
+
+div#show-files-to-upload-title-bar{
+	width:100%;
+	overflow: hidden; 
+	margin: 15px 0px 15px 0px; 
+	background-color: #EAEEF4; 
+	color: #007200; 
+	padding: 5px 0 5px 0; 
+	font-weight: bold;
+}
+
+div#show-files-to-upload-title{
+	float:left;
+}
+
+div#show-files-to-upload-title-close{
+	float:right;
+	cursor:pointer;
 }
