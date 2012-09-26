@@ -1,7 +1,8 @@
 <html>
 <head>
-	<title>TTS::Gah-veta</title>
 	<link rel="stylesheet" type="text/css" href="css/app.css">
+	<script src="http:////ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	<script src="js/app.js"></script>
 </head>
 <body>
 	<div id="main">
@@ -15,71 +16,26 @@
 					<!-- Drag n' drop</br>your files here</br>or select them -->
 				</div>
 				<div id="upload-files-holder-button">	
-					<button id="upload-files-button">
+					<div id="upload-files-button">
 						Selecione-os
-						<!-- Select them -->
-					</button>
+						<input type='file' name='files[]' multiple id='input-file'/>
+					</div>
 				</div>
 			</div>
 			<div id="files">
-				<ul id="file-list">	
-										<li>
-						<div class="file-image"><img src="img/txt.png"/></div>
-						<div class="file-name">reallylongfiletosseehowttsfilegavethawilhandlefileswithsuchn...</div>
-						<div class="file-size">0KB</div>
-						<div class="file-download"><a href='download/reallylongfiletosseehowttsfilegavethawilhandlefileswithsuchnamepravercomoficaessaporraai.txt'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/mp3.png"/></div>
-						<div class="file-name">Red_Hook_Ramblers_-_12_-_Aint_Gonna_Give_Jelly_Roll.mp3</div>
-						<div class="file-size">7MB</div>
-						<div class="file-download"><a href='download/Red_Hook_Ramblers_-_12_-_Aint_Gonna_Give_Jelly_Roll.mp3'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/pdf.png"/></div>
-						<div class="file-name">CV_Cristiana_Matias.pdf</div>
-						<div class="file-size">57KB</div>
-						<div class="file-download"><a href='download/CV_Cristiana_Matias.pdf'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/mp3.png"/></div>
-						<div class="file-name">justOneMusic.mp3</div>
-						<div class="file-size">0KB</div>
-						<div class="file-download"><a href='download/justOneMusic.mp3'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/mp3.png"/></div>
-						<div class="file-name">Red_Hook_Ramblers_-_09_-_banter.mp3</div>
-						<div class="file-size">2MB</div>
-						<div class="file-download"><a href='download/Red_Hook_Ramblers_-_09_-_banter.mp3'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/pdf.png"/></div>
-						<div class="file-name">canivete-shell.pdf</div>
-						<div class="file-size">168KB</div>
-						<div class="file-download"><a href='download/canivete-shell.pdf'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/py.png"/></div>
-						<div class="file-name">myProgram.py</div>
-						<div class="file-size">0KB</div>
-						<div class="file-download"><a href='download/myProgram.py'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/py.png"/></div>
-						<div class="file-name">tts.py</div>
-						<div class="file-size">0KB</div>
-						<div class="file-download"><a href='download/tts.py'>Download</a></div>
-					</li>
-					<li>
-						<div class="file-image"><img src="img/pdf.png"/></div>
-						<div class="file-name">apostila-introducao-shell.pdf</div>
-						<div class="file-size">316KB</div>
-						<div class="file-download"><a href='download/apostila-introducao-shell.pdf'>Download</a></div>
-					</li>
-				</ul>
+				<ul class="file-list">	
+									</ul>
 			</div>
 		</div>
 	</div>
+	<div id="show-files-to-upload">
+		<div id='show-files-to-upload-title-bar'>
+			<div id='show-files-to-upload-title'>Arquivos selecionados</div>
+			<div id='show-files-to-upload-title-close'>[X]</div>
+		</div>
+		<ul class="file-list" id="list-selected-files">																		
+		</ul>
+	</div>
+	<div id="show-files-to-upload-background" />
 </body>
 </html>

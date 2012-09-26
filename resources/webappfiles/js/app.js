@@ -2,7 +2,10 @@ $(document).ready(function(){
 
 	$("#show-files-to-upload").addClass('display-off');
 	$("#show-files-to-upload-background").addClass('display-off');
-
+	$("#list-selected-files").on("click", "div.file-upload-button", function(){
+		alert("aee manow");
+	});
+	
 
 	$("input[name='files[]']").bind('change', function(evt){
 
@@ -27,7 +30,7 @@ $(document).ready(function(){
 			html = html + '<div class=\'file-image\'><img src=\'img/unknown.png\'/></div>';
 			html = html + '<div class=\'file-name\'>' + file.name + '</div>';
 			html = html + '<div class=\'file-size\'>' + readableFileSize + '</div>';
-			html = html + '<div class=\'file-download\'>Enviar</div>';
+			html = html + '<div class=\'file-upload-button\'>Enviar</div>';
 			html - html + '</li>';
 		}
 
