@@ -1,55 +1,82 @@
-$(document).ready(function(){
+var popupManager = {
+	hidePopup: function(){
+		$("#show-files-to-upload").addClass('display-off');
+		$("#show-files-to-upload-background").addClass('display-off');
+	},
+	showPopup: function(){
+		$("#show-files-to-upload").removeClass('display-off');
+		$("#show-files-to-upload").addClass('display-on');
+		$('#show-files-to-upload-background').removeClass('display-off');
+		$('#show-files-to-upload-background').addClass('display-on');
+	}
+};
 
-	$("#show-files-to-upload").addClass('display-off');
-	$("#show-files-to-upload-background").addClass('display-off');
-	$("#list-selected-files").on("click", "div.file-upload-button", function(){
-		alert("aee manow");
-	});
-	
-
-	$("input[name='files[]']").bind('change', function(evt){
-
+var selectedFilesManager = {
+	calculateFileSize: function(fileSize){
+		var size = fileSize / 1024;
+		if((size) > 1024){
+			return Math.round(size / 1024) + "MB"; 
+		}
+		else{
+			return Math.round(size) + "KB"
+		}
+	},
+	processSelectedFiles: function(evt){
 		var selectedFiles = evt.target.files;
-		var file;
 		var html="";
-		var readableFileSize;
 		for (var i = 0; i < selectedFiles.length; i++){
-			file = selectedFiles[i];
-			if ((file.size / 1024 ) > 1024){
-				readableFileSize = Math.round(((file.size / 1024) / 1024)) + 'MB';
-			}
-			else{
-				if ((file.size / 1024) < 1){
-					readableFileSize = file.size + "B";
-				}
-				else{
-					readableFileSize = Math.round((file.size / 1024)) + 'KB';
-				}
-			}
+			var file = selectedFiles[i];
 			html = html + '<li>';
 			html = html + '<div class=\'file-image\'><img src=\'img/unknown.png\'/></div>';
 			html = html + '<div class=\'file-name\'>' + file.name + '</div>';
-			html = html + '<div class=\'file-size\'>' + readableFileSize + '</div>';
+			html = html + '<div class=\'file-size\'>' + this.calculateFileSize(file.size) + '</div>';
 			html = html + '<div class=\'file-upload-button\'>Enviar</div>';
 			html - html + '</li>';
 		}
+		return html;
+	}
+}
 
-		$('#list-selected-files').html(html);
+
+function Uploader(){
+		var files = $("#input-file");
+		var file = files[0].files[0];
 		
-		$("#show-files-to-upload").removeClass('display-off');
-		$("#show-files-to-upload").addClass('display-on');
+		  var fd = new FormData();
+          fd.append("fileToUpload", file);
+          var xhr = new XMLHttpRequest();
+         	xhr.upload.addEventListener("progress", function(evt){
+         		if(evt.lengthComputable){
+         			console.log(evt.loaded);
+         		}
+         	}
+         	, false);
+         xhr.addEventListener("load", function(){alert("fecho mano brown")}, false);
+         // xhr.addEventListener("error", uploadFailed, false);
+         // xhr.addEventListener("abort", uploadCanceled, false);
+          xhr.open("POST", "http://localhost:8086/index.html", true);
+          xhr.send(fd);		
+}
 
-		$('#show-files-to-upload-background').removeClass('display-off');
-		$('#show-files-to-upload-background').addClass('display-on');
-	});
 
-	$('#show-files-to-upload-title-close').bind('click', function(evt){
-		$("#show-files-to-upload").removeClass('display-on');
-		$("#show-files-to-upload").addClass('display-off');
+var eventHandlers = {
+	init: function(){
+		popupManager.hidePopup();
+		$("#input-file").bind('change', this.changeFileInputHandler);
+		$('#show-files-to-upload-title-close').bind('click', popupManager.hidePopup);
+		$("#list-selected-files").on("click", "div.file-upload-button", this.uploadButtonClickedHandler);
+	},	
+	changeFileInputHandler: function(evt){
+		$('#list-selected-files').html(selectedFilesManager.processSelectedFiles(evt));
+		popupManager.showPopup();
+	},
+	uploadButtonClickedHandler: function(evt){
+		
+	}
+}
 
-		$('#show-files-to-upload-background').removeClass('display-on');
-		$('#show-files-to-upload-background').addClass('display-off');
-	});
+$(document).ready(function(){
+	eventHandlers.init();
 });
 
 
