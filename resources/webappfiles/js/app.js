@@ -30,7 +30,7 @@ var selectedFilesManager = {
 			html = html + '<div class=\'file-image\'><img src=\'img/unknown.png\'/></div>';
 			html = html + '<div class=\'file-name\'>' + file.name + '</div>';
 			html = html + '<div class=\'file-size\'>' + this.calculateFileSize(file.size) + '</div>';
-			html = html + '<div class=\'file-upload-button\'>Enviar</div>';
+			html = html + '<div class=\'file-upload-button\' id=\'' + i + '\'>Enviar</div>';
 			html - html + '</li>';
 		}
 		return html;
@@ -38,26 +38,39 @@ var selectedFilesManager = {
 }
 
 
-function Uploader(){
-		var files = $("#input-file");
-		var file = files[0].files[0];
-		
-		  var fd = new FormData();
-          fd.append("fileToUpload", file);
-          var xhr = new XMLHttpRequest();
-         	xhr.upload.addEventListener("progress", function(evt){
-         		if(evt.lengthComputable){
-         			console.log(evt.loaded);
-         		}
-         	}
-         	, false);
-         xhr.addEventListener("load", function(){alert("fecho mano brown")}, false);
-         // xhr.addEventListener("error", uploadFailed, false);
-         // xhr.addEventListener("abort", uploadCanceled, false);
-          xhr.open("POST", "http://localhost:8086/index.html", true);
-          xhr.send(fd);		
-}
+var uploaderHandler = {
+	targetHTMLElement: null,
 
+	startUpload: function(evt){
+		this.targetHTMLElement = evt.target;
+		var index = this.targetHTMLElement.id;
+		var file = $("#input-file")[0].files[index];
+		var formData = new FormData();
+		formData.append("file", file);
+		this.send(formData)
+	},
+	send: function(formData){
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.upload.targetHTMLElement = this.targetHTMLElement;
+        httpRequest.upload.addEventListener("progress", this.onUploadProgress, false);
+        httpRequest.upload.addEventListener("load", this.onUploadComplete, false);
+        httpRequest.upload.addEventListener("error", this.onUploadFail, false);
+        httpRequest.upload.addEventListener("abort", this.onUploadCancel, false);
+        httpRequest.open("POST", "http://localhost:8086/index.html", true);
+        httpRequest.send(formData);	
+	},
+
+	onUploadProgress: function(evt){
+		if (evt.lengthComputable){
+			var percent = Math.round((evt.loaded * 100) / evt.total);
+			this.targetHTMLElement.innerHTML = percent + "%";
+		}
+	},
+
+	onUploadComplete: function(){
+		this.targetHTMLElement.innerHTML = '<img src="../img/ok.png"/>';
+	}
+}
 
 var eventHandlers = {
 	init: function(){
@@ -71,11 +84,13 @@ var eventHandlers = {
 		popupManager.showPopup();
 	},
 	uploadButtonClickedHandler: function(evt){
-		
+		var uploader = Object.create(uploaderHandler);
+		uploader.startUpload(evt);
 	}
 }
 
 $(document).ready(function(){
+	XMLHttpRequest.prototype.targetElement = {};
 	eventHandlers.init();
 });
 
