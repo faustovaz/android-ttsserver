@@ -160,4 +160,17 @@ public class HTTPRequest
 		return null;
 	}
 	
+	
+	/**
+	 * 
+	 * @return boundary (HTTP Field)
+	 */
+	public String getFileBoundary(){
+		String contentType = this.getHTTPHeaderFieldValue("Content-Type");
+		if (contentType != null){
+			//TODO
+		}
+		return null;
+	}
+	
 }

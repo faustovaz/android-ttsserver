@@ -40,7 +40,7 @@ var selectedFilesManager = {
 
 		return html;
 	}
-}
+};
 
 
 var uploaderHandler = {
@@ -62,7 +62,7 @@ var uploaderHandler = {
         httpRequest.upload.addEventListener("load", this.onUploadComplete, false);
         httpRequest.upload.addEventListener("error", this.onUploadFail, false);
         httpRequest.upload.addEventListener("abort", this.onUploadCancel, false);
-        httpRequest.open("POST", "http://localhost:8086/index.html", true);
+        httpRequest.open("POST", "http://localhost:8088/index.html", true);
         httpRequest.send(formData);	
 	},
 
@@ -74,10 +74,9 @@ var uploaderHandler = {
 	},
 
 	onUploadComplete: function(){
-		this.targetHTMLElement.parentElement.className = "";
 		this.targetHTMLElement.innerHTML = 'Enviado';
 	}
-}
+};
 
 var eventHandlers = {
 	init: function(){
@@ -94,7 +93,7 @@ var eventHandlers = {
 		var uploader = Object.create(uploaderHandler);
 		uploader.startUpload(evt);
 	}
-}
+};
 
 $(document).ready(function(){
 	eventHandlers.init();
