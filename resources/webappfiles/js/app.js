@@ -8,6 +8,10 @@ var popupManager = {
 		$("#show-files-to-upload").addClass('display-on');
 		$('#show-files-to-upload-background').removeClass('display-off');
 		$('#show-files-to-upload-background').addClass('display-on');
+	},
+	closePopup: function(){
+		popupManager.hidePopup();
+		window.location.reload();
 	}
 };
 
@@ -33,6 +37,7 @@ var selectedFilesManager = {
 			html = html + '<div class=\'file-upload-button\' id=\'' + i + '\'>Enviar</div>';
 			html - html + '</li>';
 		}
+
 		return html;
 	}
 }
@@ -42,6 +47,7 @@ var uploaderHandler = {
 	targetHTMLElement: null,
 
 	startUpload: function(evt){
+		evt.stopPropagation();
 		this.targetHTMLElement = evt.target;
 		var index = this.targetHTMLElement.id;
 		var file = $("#input-file")[0].files[index];
@@ -63,12 +69,13 @@ var uploaderHandler = {
 	onUploadProgress: function(evt){
 		if (evt.lengthComputable){
 			var percent = Math.round((evt.loaded * 100) / evt.total);
-			this.targetHTMLElement.innerHTML = percent + "%";
+			this.targetHTMLElement.innerHTML = 'Enviando...  ' + percent + "%";
 		}
 	},
 
 	onUploadComplete: function(){
-		this.targetHTMLElement.innerHTML = '<img src="../img/ok.png"/>';
+		this.targetHTMLElement.parentElement.className = "";
+		this.targetHTMLElement.innerHTML = 'Enviado';
 	}
 }
 
@@ -76,7 +83,7 @@ var eventHandlers = {
 	init: function(){
 		popupManager.hidePopup();
 		$("#input-file").bind('change', this.changeFileInputHandler);
-		$('#show-files-to-upload-title-close').bind('click', popupManager.hidePopup);
+		$('#show-files-to-upload-title-close').bind('click', popupManager.closePopup);
 		$("#list-selected-files").on("click", "div.file-upload-button", this.uploadButtonClickedHandler);
 	},	
 	changeFileInputHandler: function(evt){
@@ -90,7 +97,6 @@ var eventHandlers = {
 }
 
 $(document).ready(function(){
-	XMLHttpRequest.prototype.targetElement = {};
 	eventHandlers.init();
 });
 
