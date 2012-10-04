@@ -62,7 +62,7 @@ var uploaderHandler = {
         httpRequest.upload.addEventListener("load", this.onUploadComplete, false);
         httpRequest.upload.addEventListener("error", this.onUploadFail, false);
         httpRequest.upload.addEventListener("abort", this.onUploadCancel, false);
-        httpRequest.open("POST", "http://localhost:8088/index.html", true);
+        httpRequest.open("POST", "index.html", true);
         httpRequest.send(formData);	
 	},
 

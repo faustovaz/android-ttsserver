@@ -1,5 +1,7 @@
 package br.org.ttsfiler.util;
 
+import java.io.File;
+
 /**
  * 
  * @author fausto
@@ -12,6 +14,7 @@ public class TTSFileEntity {
 	public String extension;
 	public String normalizedSize;
 	public String normalizedFileName;
+	public String fileTypeImageName;
 
 	
 	public void setName(String name){
@@ -23,8 +26,13 @@ public class TTSFileEntity {
 	
 	protected void setExtension(){
 		String nameParts[] = this.name.split("\\.");
-		int lastIndex = nameParts.length - 1;
-		this.extension = nameParts[lastIndex];
+		if(nameParts.length > 0){
+			int lastIndex = nameParts.length - 1;
+			this.extension = nameParts[lastIndex];	
+		}
+		else{
+			this.extension = "unknown";
+		}
 	}
 	
 	protected void setNormalizedFileName(){
@@ -76,5 +84,15 @@ public class TTSFileEntity {
 	
 	public String getNormalizedFileName(){
 		return this.normalizedFileName;
+	}
+	
+	public String getFileTypeImageName(){
+		File file = new File("resources/webappfiles/img/" + this.getExtension() + ".png");
+		if (file.exists()){
+			return this.getExtension();
+		}
+		else{
+			return "unknown";
+		}
 	}
 }

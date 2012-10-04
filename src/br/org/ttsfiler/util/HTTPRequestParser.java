@@ -32,7 +32,12 @@ public class HTTPRequestParser {
 	 * 	Example of messages:	--------------------2334562452452
 	 * 							--------------------1234567891234
 	 */
-	public static final String REGEX_HTTP_UPLOADED_FILE_BOUNDARY = "-+[0-9]+";
+	public static final String REGEX_HTTP_UPLOADED_FILE_BOUNDARY = "-+[\\w]+";
+	
+	/**
+	 * 
+	 */
+	public static final String REGEX_CONTENT_DISPOSITION_FILE_NAME = "filename=\"([\\w\\s&.-]+)\"";
 	
 	
 	private String httpMethod;

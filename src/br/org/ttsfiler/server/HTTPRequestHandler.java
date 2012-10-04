@@ -83,6 +83,7 @@ public class HTTPRequestHandler implements Runnable
 				}
 				else{
 					buffer.delete(buffer.length() - 2, buffer.length()); //Delete the last two char in the string: \r\n
+					System.out.println(buffer.toString());
 					this.httpRequest.addHTTPHeader(buffer.toString());
 					buffer.delete(0, buffer.length()); //Empty the string of the buffer.
 				}
@@ -145,18 +146,18 @@ public class HTTPRequestHandler implements Runnable
 				}
 				else{
 					buffer.delete(buffer.length() - 2, buffer.length());
-					System.out.println(buffer.toString());
 					this.httpRequest.addHTTPHeader(buffer.toString());
 					buffer.delete(0, buffer.length());
 				}
 			}
 		}
 		
-		
 		Integer contentLength = Integer.valueOf(this.httpRequest.getHTTPHeaderFieldValue("Content-Length"));
-		String fileBoundary = this.httpRequest.getHTTPHeaderFieldValue("File-Boundary");
+		String fileBoundary = this.httpRequest.getFileBoundary();
+		if(fileBoundary == null){
+			fileBoundary = this.httpRequest.getHTTPHeaderFieldValue("File-Boundary");			
+		}
 		Integer totalOfBytesToBeRead = contentLength - numberOfBytesRead - fileBoundary.length() - 6;
-		
 		byte byteOfFile[] = new byte[totalOfBytesToBeRead];
 		byteRead = new byte[1];
 		int i = 0;

@@ -145,8 +145,7 @@ public class HTTPRequest
 	public String getUploadedFileName(){
 		String contentDisposition = this.getHTTPHeaderFieldValue("Content-Disposition");
 		if (contentDisposition != null){
-			String regex = "filename=\"([\\w.-]+)\"";
-			Pattern pattern = Pattern.compile(regex);
+			Pattern pattern = Pattern.compile(HTTPRequestParser.REGEX_CONTENT_DISPOSITION_FILE_NAME);
 			Matcher matcher;
 			String properties[] = contentDisposition.split(";");
 			for (String property : properties) {
@@ -168,7 +167,17 @@ public class HTTPRequest
 	public String getFileBoundary(){
 		String contentType = this.getHTTPHeaderFieldValue("Content-Type");
 		if (contentType != null){
-			//TODO
+			String regex = "boundary=(-+[\\w]+)";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher;
+			String contentTypeSplitted[] = contentType.split(";");
+			for (String contentTypeProperty : contentTypeSplitted){
+				contentTypeProperty = contentTypeProperty.trim();
+				matcher = pattern.matcher(contentTypeProperty);
+				if(matcher.matches()){
+					return matcher.group(1);
+				}
+			}			
 		}
 		return null;
 	}
