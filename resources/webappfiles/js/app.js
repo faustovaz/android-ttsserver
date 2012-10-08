@@ -35,6 +35,7 @@ var selectedFilesManager = {
 			html = html + '<div class=\'file-name\'>' + file.name + '</div>';
 			html = html + '<div class=\'file-size\'>' + this.calculateFileSize(file.size) + '</div>';
 			html = html + '<div class=\'file-upload-button\' id=\'' + i + '\'>Enviar</div>';
+			html = html + '<div class=\'file-upload-progress\' style="display:none"></div>'; 
 			html - html + '</li>';
 		}
 
@@ -44,12 +45,14 @@ var selectedFilesManager = {
 
 
 var uploaderHandler = {
-	targetHTMLElement: null,
+	elementToShowProgress: null,
 
 	startUpload: function(evt){
-		evt.stopPropagation();
-		this.targetHTMLElement = evt.target;
-		var index = this.targetHTMLElement.id;
+		var targetHTMLElement = evt.target;
+		this.elementToShowProgress  = targetHTMLElement.parentElement.childNodes[4];
+		targetHTMLElement.style.display = 'none';
+		this.elementToShowProgress.style.display = "block";
+		var index = targetHTMLElement.id;
 		var file = $("#input-file")[0].files[index];
 		var formData = new FormData();
 		formData.append("file", file);
@@ -57,7 +60,7 @@ var uploaderHandler = {
 	},
 	send: function(formData){
         var httpRequest = new XMLHttpRequest();
-        httpRequest.upload.targetHTMLElement = this.targetHTMLElement;
+        httpRequest.upload.elementToShowProgress = this.elementToShowProgress;
         httpRequest.upload.addEventListener("progress", this.onUploadProgress, false);
         httpRequest.upload.addEventListener("load", this.onUploadComplete, false);
         httpRequest.upload.addEventListener("error", this.onUploadFail, false);
@@ -69,12 +72,12 @@ var uploaderHandler = {
 	onUploadProgress: function(evt){
 		if (evt.lengthComputable){
 			var percent = Math.round((evt.loaded * 100) / evt.total);
-			this.targetHTMLElement.innerHTML = 'Enviando...  ' + percent + "%";
+			this.elementToShowProgress.innerHTML = 'Enviando...  ' + percent + "%";
 		}
 	},
 
 	onUploadComplete: function(){
-		this.targetHTMLElement.innerHTML = 'Enviado';
+		this.elementToShowProgress.innerHTML = '<img src="../img/ok.png"/>';
 	}
 };
 

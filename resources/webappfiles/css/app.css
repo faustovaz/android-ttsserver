@@ -219,3 +219,12 @@ div.file-upload-button{
 	color: #FFFFFF;
 	cursor: pointer;
 }
+
+div.file-upload-progress{
+	height: 24px;
+	float: right;
+	line-height: 24px;
+	padding: 1px;
+	font-size: 14px;
+	font-family: Consolas;
+}
