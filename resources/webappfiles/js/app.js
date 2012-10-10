@@ -78,6 +78,10 @@ var uploaderHandler = {
 
 	onUploadComplete: function(){
 		this.elementToShowProgress.innerHTML = '<img src="../img/ok.png"/>';
+	},
+
+	onUploadFail: function(){
+		this.elementToShowProgress.innerHTML = '<img src="../img/error.png"/>';
 	}
 };
 

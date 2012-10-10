@@ -1,5 +1,7 @@
 package br.org.ttsfiler.server;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -63,6 +65,12 @@ public class HTTPRequest
 	 */
 	protected void setResource(String resource)
 	{
+		try{
+			resource = URLDecoder.decode(resource, "UTF-8");
+		}
+		catch(UnsupportedEncodingException e){
+			e.printStackTrace();
+		}
 		if(resource.equals("/")){
 			this.resource = TTSServerProperties.getDocumentRoot() + "/index.html";
 		}
