@@ -17,8 +17,7 @@ import br.org.ttsfiler.util.TTSServerProperties;
  * Handle HTTP Requests
  * @author Fausto Vaz
  */
-public class HTTPRequestHandler implements Runnable 
-{
+public class HTTPRequestHandler implements Runnable{
 
 	
 	private Socket socket;
@@ -56,7 +55,7 @@ public class HTTPRequestHandler implements Runnable
 	 * 
 	 * @throws IOException
 	 */
-	protected void handleRequest() throws IOException	{
+	protected void handleRequest() throws IOException{
 		this.readHTTPHeaders();
 		this.processHTTPRequest();
 	}
@@ -69,11 +68,9 @@ public class HTTPRequestHandler implements Runnable
 	 */
 	protected void readHTTPHeaders() throws IOException{
 		this.reader = new BufferedInputStream(this.socket.getInputStream());
-		this.httpRequest = new HTTPRequest();
 		byte byteRead[] = new byte[1];
 		char charRead;
 		StringBuffer buffer = new StringBuffer();
-		
 		while(this.reader.read(byteRead) != -1){
 			charRead = (char) byteRead[0];
 			buffer.append(charRead);
@@ -82,10 +79,7 @@ public class HTTPRequestHandler implements Runnable
 					break;
 				}
 				else{
-					buffer.delete(buffer.length() - 2, buffer.length()); //Delete the last two char in the string: \r\n
-					System.out.println(buffer.toString());
-					this.httpRequest.addHTTPHeader(buffer.toString());
-					buffer.delete(0, buffer.length()); //Empty the string of the buffer.
+					this.addHTTPHeader(buffer);
 				}
 			}
 			
@@ -93,21 +87,29 @@ public class HTTPRequestHandler implements Runnable
 		
 	}
 	
+	protected void addHTTPHeader(StringBuffer httpHeaderBuffer){
+		httpHeaderBuffer.delete(httpHeaderBuffer.length() - 2, httpHeaderBuffer.length()); //Delete the last two char in the string: \r\n
+		this.getHTTPRequest().addHTTPHeader(httpHeaderBuffer.toString());
+		httpHeaderBuffer.delete(0, httpHeaderBuffer.length()); //Empty the string of the buffer.
+	}
 	
+	
+	protected HTTPRequest getHTTPRequest(){
+		if (this.httpRequest == null){
+			this.httpRequest = new HTTPRequest();
+		}
+		return this.httpRequest;
+	}
 	
 	/**
 	 * Handle HTTP and process request depending on HTTP Method
 	 * @throws IOException 
 	 */
-	protected void processHTTPRequest() throws IOException
-	{
-		if(this.httpRequest.isGET()){
+	protected void processHTTPRequest() throws IOException{
+		if(this.httpRequest.isGET())
 			this.processHTTPGetRequest();
-		}
-		else{
-			
+		else
 			this.processHTTPPostRequest();
-		}
 	}
 	
 	
@@ -145,9 +147,7 @@ public class HTTPRequestHandler implements Runnable
 					break;
 				}
 				else{
-					buffer.delete(buffer.length() - 2, buffer.length());
-					this.httpRequest.addHTTPHeader(buffer.toString());
-					buffer.delete(0, buffer.length());
+					this.addHTTPHeader(buffer);
 				}
 			}
 		}
@@ -189,7 +189,7 @@ public class HTTPRequestHandler implements Runnable
 			input.print(this.httpHeaderBuilder.buildHTTPHeader(requestedResource));
 			input.write(b);
 			input.close();
-			this.socket.close();
+			//this.socket.close();
 		}
 		catch(IOException ioException){
 			

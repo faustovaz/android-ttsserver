@@ -123,6 +123,7 @@ public class HTTPRequest
 	 * @param header
 	 */
 	public void addHTTPHeader(String header){
+		System.out.println(header);
 		HTTPRequestParser httpRequestParser = this.getHTTPRequestParser();
 		httpRequestParser.parseHTTPHeader(header);
 		
