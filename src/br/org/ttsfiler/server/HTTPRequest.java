@@ -69,7 +69,7 @@ public class HTTPRequest
 			resource = URLDecoder.decode(resource, "UTF-8");
 		}
 		catch(UnsupportedEncodingException e){
-			e.printStackTrace();
+			e.printStackTrace(); //TODO - Handle this exception properly
 		}
 		if(resource.equals("/")){
 			this.resource = TTSServerProperties.getDocumentRoot() + "/index.html";
@@ -123,10 +123,8 @@ public class HTTPRequest
 	 * @param header
 	 */
 	public void addHTTPHeader(String header){
-		System.out.println(header);
 		HTTPRequestParser httpRequestParser = this.getHTTPRequestParser();
 		httpRequestParser.parseHTTPHeader(header);
-		
 		if(httpRequestParser.isHTTPMethodDescriptor()){ 
 			this.setHTTPMethod(httpRequestParser.getHTTPMethod());
 			this.setResource(httpRequestParser.getResource());
@@ -188,7 +186,7 @@ public class HTTPRequest
 				}
 			}			
 		}
-		return null;
+		return this.getHTTPHeaderFieldValue("File-Boundary");
 	}
 	
 }

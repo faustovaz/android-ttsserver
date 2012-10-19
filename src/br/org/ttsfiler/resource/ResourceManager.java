@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import br.org.ttsfiler.filemanager.TTSFileManager;
 import br.org.ttsfiler.server.HTTPRequest;
 import br.org.ttsfiler.util.TTSServerProperties;
 import br.org.ttsfiler.util.TemplateEngine;
@@ -79,6 +80,12 @@ public class ResourceManager {
 	
 	protected TemplateEngine getTemplateEngine(){
 		return new TemplateEngine();
+	}
+	
+	
+	public void saveResource(byte bytes[], String resourceName){
+		TTSFileManager fileManager = new TTSFileManager();
+		fileManager.save(bytes, resourceName);
 	}
 
 }

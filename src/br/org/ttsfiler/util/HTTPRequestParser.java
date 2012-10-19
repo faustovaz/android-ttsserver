@@ -18,7 +18,7 @@ public class HTTPRequestParser {
 	 *	Example of messages: 	GET /index.html HTTP1.1
 	 *							POS /home/site/example.html HTTP1.1 
 	 */
-	public static final String REGEX_METHOD_AND_RESOURCE_DESCRIPTOR = "(GET|POST)\\s*([\\w.%/?-]+)\\s*.*";
+	public static final String REGEX_METHOD_AND_RESOURCE_DESCRIPTOR = "(GET|POST)\\s*([\\w.%/?:-]+)\\s*.*";
 	
 	/**
 	 * 	Regex used for parsing and retrieve the values of HTTP headers.
@@ -37,7 +37,7 @@ public class HTTPRequestParser {
 	/**
 	 * 
 	 */
-	public static final String REGEX_CONTENT_DISPOSITION_FILE_NAME = "filename=\"([\\w\\s&.-]+)\"";
+	public static final String REGEX_CONTENT_DISPOSITION_FILE_NAME = "filename=\"([\\w\\s&.:-]+)\"";
 	
 	
 	private String httpMethod;

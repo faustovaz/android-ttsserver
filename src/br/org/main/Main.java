@@ -7,16 +7,20 @@ import br.org.ttsfiler.server.TTSFilerServer;
 public class Main{
 
 	
-	public void fazAlgo(StringBuffer buffer){
-		buffer.append("To aqui no faz algo");
-	}
-	
-	
+
 	public static void main(String[] args) throws IOException{
-		TTSFilerServer server = new TTSFilerServer(8088);
+		TTSFilerServer server = new TTSFilerServer();
+		System.out.println(server.getPort());
 		server.start();
 	}
 
+	//TODO - Handle Exceptions
+	//TODO - Log all exceptions
+	//TODO - Export Library
+	//TODO - Create android application
+	//TODO - Implement drag n' drop files in javascript
+	//TODO - Change font-family of html page
+	
 //	POST /index.html HTTP/1.1
 //	Host: localhost:8088
 //	User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20100101 Firefox/15.0.1

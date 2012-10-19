@@ -17,29 +17,22 @@ public class TTSFilerServer{
 	private int port;
 	
 	
-	/**
-	 * Create a TTSFilerServer instance with default port 8182
-	 */
-	public TTSFilerServer()	{
-		this.port = 8182;
+	public TTSFilerServer(){
+		try {
+			this.server = new ServerSocket(0);
+			this.port = this.server.getLocalPort();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
-
-	
-	/**
-	 * Create a TTSFilerServer instance with the given port number
-	 * @param port
-	 */
-	public TTSFilerServer(int port){
-		this.port = port;
-	}
-	
 	
 	/**
 	 * Starting listen to the {this.port}
 	 */
 	public void start(){
 		try	{
-			this.server = new ServerSocket(this.port);
 			this.listen();
 		}
 		catch (IOException e){
@@ -82,6 +75,10 @@ public class TTSFilerServer{
 		HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(socket);
 		Thread httpHandlerJob = new Thread(httpRequestHandler);
 		httpHandlerJob.start();
+	}
+	
+	public int getPort(){
+		return this.port;
 	}
 
 }

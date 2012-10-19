@@ -1,6 +1,9 @@
 package br.org.ttsfiler.filemanager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,23 @@ public class TTSFileManager {
 			}
 		}
 		return list;
+	}
+	
+	
+	public void save(byte[] bytes, String fileName){
+		FileOutputStream outPut;
+		try {
+			outPut = new FileOutputStream(TTSServerProperties.uploadedFilesPath() + "/" + fileName);
+			outPut.write(bytes);
+			outPut.close();
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch(IOException ioException){
+			ioException.printStackTrace();
+		}
+
 	}
 	
 }
