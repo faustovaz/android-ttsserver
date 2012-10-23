@@ -1,8 +1,12 @@
 package br.org.ttsfiler.server;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 /**
  * <b>TTSFileServer</b>
@@ -77,9 +81,30 @@ public class TTSFilerServer{
 		httpHandlerJob.start();
 	}
 	
+	
 	public int getPort(){
 		return this.port;
 	}
+	
+	
+	public String getIPAddress() throws Exception{
+		try{
+			String ip = "";
+			  for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+		            NetworkInterface intf = en.nextElement();
+		            for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+		                InetAddress inetAddress = enumIpAddr.nextElement();
+		                if (!inetAddress.isLoopbackAddress() && inetAddress.isSiteLocalAddress())
+		                    ip =  inetAddress.getHostAddress();
+		            }
+			  }
+			  return ip;
+		}
+		catch(SocketException socketException){
+			throw new Exception(socketException.getCause());
+		}
+
+	}
+	
 
 }
-

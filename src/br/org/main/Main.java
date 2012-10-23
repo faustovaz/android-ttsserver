@@ -1,18 +1,17 @@
 package br.org.main;
 
-import java.io.IOException;
-
 import br.org.ttsfiler.server.TTSFilerServer;
 
 public class Main{
 
 	
 
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws Exception{
 		TTSFilerServer server = new TTSFilerServer();
-		System.out.println(server.getPort());
-		server.start();
+		System.out.println("http://" + server.getIPAddress() + ":" + server.getPort());
+		server.start();	  
 	}
+	 
 
 	//TODO - Handle Exceptions
 	//TODO - Log all exceptions
