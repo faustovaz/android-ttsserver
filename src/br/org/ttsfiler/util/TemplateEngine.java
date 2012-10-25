@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.activation.MimetypesFileTypeMap;
 
 import br.org.ttsfiler.filemanager.TTSFileManager;
+import br.org.ttsfiler.log.Logger;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -55,23 +56,21 @@ public class TemplateEngine {
 	protected void generateHTMLFileFromTemplate(String requestedResource){
 		String templateName = requestedResource + ".ftl";
 		try {
-			Template template = this.templateConfiguration.getTemplate(templateName);
 			TTSFileManager fileManager = new TTSFileManager();
+			Template template = this.templateConfiguration.getTemplate(templateName);
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("files", fileManager.getUploadedFiles());
 			File f = new File(requestedResource);
 			Writer out = new PrintWriter(f);
-			try {
-				template.process(map, out);
-			} catch (TemplateException e) {
-				e.printStackTrace();
-			}
-			
+			template.process(map, out);
 		} 
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (TemplateException templateException){
+			Logger.error("TTSServerMessage.Template_TEMPLATE_EXCEPTION", templateException.getMessage(), templateException.getCause());
 		}
+		catch (IOException ioException) {
+			Logger.error("TTSServerMessage.File_IO_EXCEPTION", ioException.getMessage(), ioException.getCause());
+		}
+
 	}
 }
 

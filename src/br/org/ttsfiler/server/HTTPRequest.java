@@ -167,6 +167,25 @@ public class HTTPRequest
 	}
 	
 	
+	public String getUploadedFileName(String t){
+		String contentDisposition = this.getHTTPHeaderFieldValue("Content-Disposition");
+		if (contentDisposition != null){
+			Pattern pattern = Pattern.compile(HTTPRequestParser.REGEX_CONTENT_DISPOSITION_FILE_NAME);
+			Matcher matcher;
+			String properties[] = contentDisposition.split(";");
+			for (String property : properties) {
+				property = property.trim();
+				matcher = pattern.matcher(property);
+				if(matcher.matches()){
+					String fieldAndValue[] = property.split("=");
+					return fieldAndValue[1];
+				}
+			}
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * 
 	 * @return boundary (HTTP Field)

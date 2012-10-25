@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 
+import br.org.ttsfiler.exception.TTSException;
+import br.org.ttsfiler.log.Logger;
 import br.org.ttsfiler.resource.RequestedResource;
 import br.org.ttsfiler.resource.ResourceManager;
 import br.org.ttsfiler.util.HTTPHeaderBuilder;
@@ -23,6 +25,7 @@ public class HTTPRequestHandler implements Runnable{
 	private HTTPRequest httpRequest;
 	private HTTPHeaderBuilder httpHeaderBuilder;
 	private BufferedInputStream reader;
+	private ResourceManager resourceManager;
 	
 	
 	/**
@@ -44,8 +47,11 @@ public class HTTPRequestHandler implements Runnable{
 			this.handleRequest();
 			this.socket.close();
 		} 
+		catch(TTSException ttsException){
+			Logger.error(ttsException.getTTSCodeMessage(), ttsException.getMessage(), ttsException.getCause());
+		}
 		catch (IOException e){
-			e.printStackTrace(); //TODO Handle properly this exception;
+			Logger.error("TTSServerMessage.Socket_IOERROR", e.getMessage(), e.getCause());
 		}
 	}
 
@@ -54,7 +60,7 @@ public class HTTPRequestHandler implements Runnable{
 	 * 
 	 * @throws IOException
 	 */
-	protected void handleRequest() throws IOException{
+	protected void handleRequest() throws TTSException{
 		this.readHTTPHeaders();
 		if (this.getHTTPRequest().isGET()){
 			this.processHTTPGetRequest();
@@ -67,33 +73,44 @@ public class HTTPRequestHandler implements Runnable{
 	
 	/**
 	 * 
-	 * @throws IOException
+	 * @throws TTSException 
 	 */
-	protected int readHTTPHeaders() throws IOException{
-		this.setReader(this.socket.getInputStream()); 		
-		byte byteRead[] = new byte[1];
-		char charRead;
-		int numberOfBytesRead = 0;
-		StringBuffer buffer = new StringBuffer();
-		while(this.reader.read(byteRead) != -1){
-			charRead = (char) byteRead[0];
-			buffer.append(charRead);
-			numberOfBytesRead++;
-			if(charRead == '\n'){
-				if(buffer.toString().equals("\r\n")){
-					break;
-				}
-				else{
-					this.addHTTPHeader(buffer);
+	protected int readHTTPHeaders() throws TTSException{
+		try{
+			this.setReader(this.socket.getInputStream()); 		
+			byte byteRead[] = new byte[1];
+			char charRead;
+			int numberOfBytesRead = 0;
+			StringBuffer buffer = new StringBuffer();
+			while(this.reader.read(byteRead) != -1){
+				charRead = (char) byteRead[0];
+				buffer.append(charRead);
+				numberOfBytesRead++;
+				if(charRead == '\n'){
+					if(buffer.toString().equals("\r\n")){
+						break;
+					}
+					else{
+						this.addHTTPHeader(buffer);
+					}
 				}
 			}
+			return numberOfBytesRead;
 		}
-		return numberOfBytesRead;
+		catch (IOException ioException){
+			throw new TTSException("TTSServerMessage.Socket_IOERROR", ioException.getMessage(), ioException.getCause());
+		}
 	}
 	
 	
-	protected void processHTTPGetRequest(){
-		this.sendRequestedResource();
+	protected void processHTTPGetRequest() throws TTSException{
+		try{
+			this.sendRequestedResource();	
+		}
+		catch(IOException ioException){
+			throw new TTSException("TTSServerMessage.Socket_IOERROR", ioException.getMessage(), ioException.getCause());
+		}
+		
 	}
 	
 	
@@ -101,25 +118,28 @@ public class HTTPRequestHandler implements Runnable{
 	 * @throws IOException 
 	 * 
 	 */
-	protected void processHTTPPostRequest() throws IOException{
+	protected void processHTTPPostRequest() throws TTSException{
 		int numberOfBytesRead = this.readHTTPHeaders(); //Continue reading HTTP Fields, ex.: Content-Disposition, boundary, etc
-		Integer contentLength = Integer.valueOf(this.httpRequest.getHTTPHeaderFieldValue("Content-Length"));
-		String fileBoundary = this.httpRequest.getFileBoundary();
-		Integer totalOfBytesToBeRead = contentLength - numberOfBytesRead - fileBoundary.length() - 6;
-		byte byteOfTheFile[] = new byte[totalOfBytesToBeRead];
-		byte byteRead[] = new byte[1];
-		int index = 0;
-		while(totalOfBytesToBeRead > 0 ){
-			if (this.reader.read(byteRead) == -1)
-				throw new IOException();
-			else
+		try{
+			Integer contentLength = Integer.valueOf(this.httpRequest.getHTTPHeaderFieldValue("Content-Length"));
+			String fileBoundary = this.httpRequest.getFileBoundary();
+			Integer totalOfBytesToBeRead = contentLength - numberOfBytesRead - fileBoundary.length() - 6;
+			byte byteOfTheFile[] = new byte[totalOfBytesToBeRead];
+			byte byteRead[] = new byte[1];
+			int index = 0;
+			while(totalOfBytesToBeRead > 0 ){
+				this.reader.read(byteRead);
 				byteOfTheFile[index] = byteRead[0];
-			index++;
-			totalOfBytesToBeRead--;
+				index++;
+				totalOfBytesToBeRead--;
+			}
+			//The purpose of this is read file contents, so other types of posts request will not be handled
+			this.getResourceManager().saveResource(byteOfTheFile, this.httpRequest.getUploadedFileName());
+			this.sendRequestedResource();
 		}
-		//The purpose of this is read file contents, so other types of posts request will not be handled
-		this.getResourceManager().saveResource(byteOfTheFile, this.httpRequest.getUploadedFileName());
-		this.sendRequestedResource();
+		catch(IOException ioException){
+			throw new TTSException("TTSServerMessage.Socket_IOERROR", ioException.getMessage(), ioException.getCause());
+		}
 	}	
 	
 	
@@ -130,26 +150,22 @@ public class HTTPRequestHandler implements Runnable{
 	}
 	
 	
-	protected void sendRequestedResource(){
+	protected void sendRequestedResource() throws IOException{
 		RequestedResource requestedResource = this.getResourceManager().getRequestedResource(this.httpRequest);
 		this.sendResponse(requestedResource);
 	}
 			
 	
 	/**
+	 * @throws IOException 
 	 * 
 	 */
-	protected void sendResponse(RequestedResource requestedResource){
-		try{
+	protected void sendResponse(RequestedResource requestedResource) throws IOException{
 			byte bytes[] = requestedResource.getBytesFromResource();
 			PrintStream input = new PrintStream(this.socket.getOutputStream());
 			input.print(this.httpHeaderBuilder.buildHTTPHeader(requestedResource));
 			input.write(bytes);
 			input.close();
-		}
-		catch(IOException ioException){
-			//TODO Handle this
-		}
 	}
 	
 	
@@ -169,7 +185,10 @@ public class HTTPRequestHandler implements Runnable{
 	
 	
 	protected ResourceManager getResourceManager(){
-		return new ResourceManager();
+		if(this.resourceManager == null){
+			this.resourceManager = new ResourceManager();
+		}
+		return this.resourceManager;
 	}
 	
 }

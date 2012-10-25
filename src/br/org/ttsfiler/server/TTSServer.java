@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import br.org.ttsfiler.exception.TTSException;
+
 /**
  * <b>TTSFileServer</b>
  * </br>
@@ -15,32 +17,39 @@ import java.util.Enumeration;
  * @author Fausto Vaz
  * 
  */
-public class TTSFilerServer{
+public class TTSServer{
 
 	private ServerSocket server;
 	private int port;
 	
 	
-	public TTSFilerServer(){
+	public TTSServer() throws TTSException{
 		try {
 			this.server = new ServerSocket(0);
 			this.port = this.server.getLocalPort();
 		} 
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException ioException) {
+			throw new TTSException("TTSServerMessage.Socket_IO_EXCEPTION", ioException.getMessage(), ioException.getCause());
+		}
+		catch (SecurityException securityException){
+			throw new TTSException("TTSServerMessage.Socket_SECURITY_ERROR", securityException.getMessage(), securityException.getCause());
+		}
+		catch(IllegalArgumentException illegalArgumentException){
+			throw new TTSException("TTSServerMEssage.Socket_ILLEGAL_ARGUMENT", illegalArgumentException.getMessage(), illegalArgumentException.getCause());
 		}
 		
 	}
 	
 	/**
 	 * Starting listen to the {this.port}
+	 * @throws TTSException 
 	 */
-	public void start(){
+	public void start() throws TTSException{
 		try	{
 			this.listen();
 		}
 		catch (IOException e){
-			e.printStackTrace(); //TODO Handle the exception
+			throw new TTSException("TTSServerMessage.Socket_IO_EXCEPTION_listening", e.getMessage(), e.getCause());
 		}
 	}
 	
@@ -48,13 +57,14 @@ public class TTSFilerServer{
 	/**
 	 * Stop the server
 	 * @throws IOException
+	 * @throws TTSException 
 	 */
-	public void stop() throws IOException	{
+	public void stop() throws IOException, TTSException	{
 		try	{
 			this.server.close();
 		} 
 		catch (IOException e){
-			e.printStackTrace(); //TODO Handle the exception
+			throw new TTSException("TTSServerMessage.Socket_IO_EXCEPTION", e.getMessage(), e.getCause());
 		}
 	}
 	
@@ -87,7 +97,7 @@ public class TTSFilerServer{
 	}
 	
 	
-	public String getIPAddress() throws Exception{
+	public String getIPAddress() throws TTSException{
 		try{
 			String ip = "";
 			  for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
@@ -101,10 +111,12 @@ public class TTSFilerServer{
 			  return ip;
 		}
 		catch(SocketException socketException){
-			throw new Exception(socketException.getCause());
+			throw new TTSException("TTSServerMessage.Socket_SOCKET_EXCEPTION", socketException.getMessage(), socketException.getCause());
 		}
-
+		
 	}
+	
+	
 	
 
 }

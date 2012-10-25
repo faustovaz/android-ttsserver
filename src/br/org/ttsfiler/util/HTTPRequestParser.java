@@ -18,14 +18,16 @@ public class HTTPRequestParser {
 	 *	Example of messages: 	GET /index.html HTTP1.1
 	 *							POS /home/site/example.html HTTP1.1 
 	 */
-	public static final String REGEX_METHOD_AND_RESOURCE_DESCRIPTOR = "(GET|POST)\\s*([\\w.%/?:-]+)\\s*.*";
+	public static final String REGEX_METHOD_AND_RESOURCE_DESCRIPTOR = "(GET|POST)\\s*([\\w.%/?:=-]+)\\s*.*";
+	//public static final String REGEX_METHOD_AND_RESOURCE_DESCRIPTOR = "(GET|POST)\\s*(.*)\\s*.*";
 	
 	/**
 	 * 	Regex used for parsing and retrieve the values of HTTP headers.
 	 * 	Example of messages:	Host: http://mysite.com:8081
 	 * 							Cache-Control: no-cache
 	 */
-	public static final String REGEX_HTTP_FIELD_AND_VALUE = "([\\w.-]+):\\s*([\\w.=;\",*/)(+:\\s-]+)";
+	//public static final String REGEX_HTTP_FIELD_AND_VALUE = "([\\w.-]+):\\s*([\\w.=;\",*/)(+:\\s\\p{L}-]+)";
+	public static final String REGEX_HTTP_FIELD_AND_VALUE = "([\\w.-]+):\\s*(.*)";
 	
 	/**
 	 * 	Regex used for validating File Boundary (those chars sent when you upload a file using HTTP)
@@ -37,7 +39,8 @@ public class HTTPRequestParser {
 	/**
 	 * 
 	 */
-	public static final String REGEX_CONTENT_DISPOSITION_FILE_NAME = "filename=\"([\\w\\s&.:-]+)\"";
+	//public static final String REGEX_CONTENT_DISPOSITION_FILE_NAME = "filename=\"([\\w\\s&.:-]+)\"";
+	public static final String REGEX_CONTENT_DISPOSITION_FILE_NAME = "filename=\"(.*)\"";
 	
 	
 	private String httpMethod;

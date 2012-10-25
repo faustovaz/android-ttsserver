@@ -44,16 +44,14 @@ public class ResourceManager {
 	 * 
 	 */
 	protected void loadFile(){
-		getTemplateEngine().generateRequestedResourceFromTemplate(this.httpRequest.getResource());
+		this.getTemplateEngine().generateRequestedResourceFromTemplate(this.httpRequest.getResource());
 		this.file = new File(this.httpRequest.getResource());
 		if(this.file.exists()){
 			this.httpStatusCode = 200;
 			this.httpStatusDescription = "OK";
 		}
 		else{
-			this.file = new File(TTSServerProperties.getDocumentRoot()+ "/404.html");
-			this.httpStatusCode = 400;
-			this.httpStatusDescription = "NOT FOUND";
+			this.load404File();
 		}
 	}
 	
@@ -66,7 +64,15 @@ public class ResourceManager {
 			this.fileInputStream = new FileInputStream(this.file);
 		}
 		catch(FileNotFoundException fileNotFound){
-			
+			this.load404File();
+			try {
+				this.fileInputStream = new FileInputStream(this.file);
+			} 
+			catch (FileNotFoundException e) {
+				//This is catch block is kind of impossible to execute, once the file we are attempting to open is the 404.html
+				//The 404.html file is located at resources/webappfiles and as a part of the TTSServer is going to be impossible to not find it.
+				e.printStackTrace(); //Just to be nice :D
+			}
 		}
 	}
 	
@@ -86,6 +92,13 @@ public class ResourceManager {
 	public void saveResource(byte bytes[], String resourceName){
 		TTSFileManager fileManager = new TTSFileManager();
 		fileManager.save(bytes, resourceName);
+	}
+	
+	
+	public void load404File(){
+		this.file = new File(TTSServerProperties.getDocumentRoot()+ "/404.html");
+		this.httpStatusCode = 400;
+		this.httpStatusDescription = "NOT FOUND";
 	}
 
 }

@@ -1,13 +1,13 @@
 package br.org.main;
 
-import br.org.ttsfiler.server.TTSFilerServer;
+import br.org.ttsfiler.server.TTSServer;
 
 public class Main{
 
 	
 
 	public static void main(String[] args) throws Exception{
-		TTSFilerServer server = new TTSFilerServer();
+		TTSServer server = new TTSServer();
 		System.out.println("http://" + server.getIPAddress() + ":" + server.getPort());
 		server.start();	  
 	}
