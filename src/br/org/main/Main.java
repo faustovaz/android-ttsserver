@@ -1,6 +1,6 @@
 package br.org.main;
 
-import br.org.ttsfiler.server.TTSServer;
+import br.org.tts.server.TTSServer;
 
 public class Main{
 
