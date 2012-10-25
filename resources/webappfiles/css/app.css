@@ -33,17 +33,17 @@ div#upload-files{
 }
 
 div#upload-files-text{
-	font-family: "Consolas";
+	font-family: "Verdana,Arial,Helvetica";
 	color: #007200;
-	margin: 8% 0 12% 12%;
+	margin: 6% 0 12% 10%;
 	float: left;
-	font-size: 16pt;
+	font-size: 20pt;
 }
 
 div#upload-files-holder-button{
 	float: right;
-	margin-top: 10%;
-	margin-right: 8%;
+	margin-top: 8%;
+	margin-right: 6%;
 	cursor: pointer;
 }
 
@@ -53,8 +53,8 @@ div#upload-files-button{
 	background-image: url('../img/slice_button.png');
 	background-repeat: repeat-x;
 	color: #FFFFFF;
-	font-family: "Consolas";
-	font-size: 16px;
+	font-family: "Verdana,Arial,Helvetica";
+	font-size: 20px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;	
@@ -85,8 +85,8 @@ div#files{
 ul.file-list{
 	list-style-type: none;
 	color: #007200;
-	font-size: 12px;
-	font-family: "verdana,arial,helvetica,sans-serif";
+	font-size: 13px;
+	font-family: "Arial,Verdana,Helvetica";
 	padding: 0px;
 	margin: 0px;
 	width: 100%
