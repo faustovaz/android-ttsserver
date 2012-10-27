@@ -1,12 +1,12 @@
 package br.org.tts.filemanager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.org.tts.util.ArrayListUtils;
 import br.org.tts.util.TTSFileEntity;
 import br.org.tts.util.TTSServerProperties;
 
@@ -19,6 +19,7 @@ import br.org.tts.util.TTSServerProperties;
  */
 public class TTSFileManager {
 
+	private FileOutputStream output;
 	
 	/**
 	 * Get all files uploaded (files that is in) to the application directory.
@@ -40,20 +41,24 @@ public class TTSFileManager {
 	}
 	
 	
-	public void save(byte[] bytes, String fileName){
-		FileOutputStream outPut;
-		try {
-			outPut = new FileOutputStream(TTSServerProperties.uploadedFilesPath() + "/" + fileName);
-			outPut.write(bytes);
-			outPut.close();
-		} 
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
+	public void save(List<Byte> bytes, String fileName) throws IOException{
+		byte data[] = ArrayListUtils.toBytes(bytes);
+		this.getFileOutputStream(fileName).write(data);
+	}
+	
+	
+	protected FileOutputStream getFileOutputStream(String fileName) throws IOException{
+		if (this.output == null){
+			this.output = new FileOutputStream(TTSServerProperties.uploadedFilesPath() + "/" + fileName);
 		}
-		catch(IOException ioException){
-			ioException.printStackTrace();
+		return this.output;
+	}
+	
+	
+	public void closeSavedFile() throws IOException{
+		if(this.output != null){
+			this.output.close();
 		}
-
 	}
 	
 }

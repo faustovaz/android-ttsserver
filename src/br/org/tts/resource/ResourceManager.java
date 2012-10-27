@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 import br.org.tts.filemanager.TTSFileManager;
 import br.org.tts.server.HTTPRequest;
@@ -24,6 +26,7 @@ public class ResourceManager {
 	private HTTPRequest httpRequest;
 	private int httpStatusCode;
 	private String httpStatusDescription;
+	private TTSFileManager fileManager;
 	
 	
 	/**
@@ -89,9 +92,12 @@ public class ResourceManager {
 	}
 	
 	
-	public void saveResource(byte bytes[], String resourceName){
-		TTSFileManager fileManager = new TTSFileManager();
-		fileManager.save(bytes, resourceName);
+	public void saveResource(List<Byte> bytes, String resourceName) throws IOException{
+		this.getFileManager().save(bytes, resourceName);
+	}
+	
+	public void finalizeSaveResource() throws IOException{
+		this.getFileManager().closeSavedFile();
 	}
 	
 	
@@ -99,6 +105,14 @@ public class ResourceManager {
 		this.file = new File(TTSServerProperties.getDocumentRoot()+ "/404.html");
 		this.httpStatusCode = 400;
 		this.httpStatusDescription = "NOT FOUND";
+	}
+	
+	
+	public TTSFileManager getFileManager(){
+		if (this.fileManager == null){
+			this.fileManager = new TTSFileManager();
+		}
+		return this.fileManager;
 	}
 
 }

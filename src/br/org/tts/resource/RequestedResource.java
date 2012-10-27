@@ -66,15 +66,11 @@ public class RequestedResource {
 	/**
 	 * 
 	 * @return
+	 * @throws IOException 
 	 */
-	public byte[] getBytesFromResource(){
+	public byte[] getBytesFromResource() throws IOException{
 		byte bytes[] = new byte[(int) this.file.length()];
-		try {
-			this.dataInputStream.read(bytes);
-		} 
-		catch (IOException e){
-			System.err.println();
-		}
+		this.dataInputStream.read(bytes);
 		return bytes;
 	}
 }

@@ -47,6 +47,10 @@ public class TTSServerProperties
 	}
 	
 	
+	public static String getMaxNumberOfBytesToReadWithoutSaving(){
+		return getResourceBundle().getString("maxNumberOfBytesToReadWithouSaving");
+	}
+	
 	
 	
 }

@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import br.org.tts.exception.TTSException;
 import br.org.tts.log.Logger;
 import br.org.tts.resource.RequestedResource;
 import br.org.tts.resource.ResourceManager;
 import br.org.tts.util.HTTPHeaderBuilder;
+import br.org.tts.util.TTSServerProperties;
 
 /**
  * <b> HTTPRequestHandler </b>
@@ -124,17 +126,25 @@ public class HTTPRequestHandler implements Runnable{
 			Integer contentLength = Integer.valueOf(this.httpRequest.getHTTPHeaderFieldValue("Content-Length"));
 			String fileBoundary = this.httpRequest.getFileBoundary();
 			Integer totalOfBytesToBeRead = contentLength - numberOfBytesRead - fileBoundary.length() - 6;
-			byte byteOfTheFile[] = new byte[totalOfBytesToBeRead];
-			byte byteRead[] = new byte[1];
-			int index = 0;
-			while(totalOfBytesToBeRead > 0 ){
-				this.reader.read(byteRead);
-				byteOfTheFile[index] = byteRead[0];
-				index++;
+			String fileName = this.httpRequest.getUploadedFileName();
+			ArrayList<Byte> bytes = new ArrayList<Byte>();
+			int maxNumberOfBytesToReadWithoutSaving = Integer.valueOf(TTSServerProperties.getMaxNumberOfBytesToReadWithoutSaving());
+			bytes.ensureCapacity(maxNumberOfBytesToReadWithoutSaving);
+			int numberOfBytes = 0;
+			while(totalOfBytesToBeRead > 0){
+				byte oneByte = (byte) this.reader.read();
+				numberOfBytes++;
+				bytes.add(oneByte);
+				if(numberOfBytes == maxNumberOfBytesToReadWithoutSaving){
+					this.getResourceManager().saveResource(bytes, fileName);
+					bytes.clear();
+					numberOfBytes = 0;
+				}
 				totalOfBytesToBeRead--;
 			}
 			//The purpose of this is read file contents, so other types of posts request will not be handled
-			this.getResourceManager().saveResource(byteOfTheFile, this.httpRequest.getUploadedFileName());
+			this.getResourceManager().saveResource(bytes, fileName);
+			this.getResourceManager().finalizeSaveResource();
 			this.sendRequestedResource();
 		}
 		catch(IOException ioException){

@@ -8,6 +8,7 @@ var popupManager = {
 		$("#show-files-to-upload").addClass('display-on');
 		$('#show-files-to-upload-background').removeClass('display-off');
 		$('#show-files-to-upload-background').addClass('display-on');
+		$('#show-files-to-upload-background').height($(document).height());
 	},
 	closePopup: function(){
 		popupManager.hidePopup();
@@ -27,7 +28,7 @@ var selectedFilesManager = {
 	},
 	processSelectedFiles: function(evt){
 		var selectedFiles = evt.target.files;
-		var html="";
+		var html='';
 		for (var i = 0; i < selectedFiles.length; i++){
 			var file = selectedFiles[i];
 			html = html + '<li>';
