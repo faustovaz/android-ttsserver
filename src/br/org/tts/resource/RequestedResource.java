@@ -4,12 +4,16 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 
+import br.org.tts.util.TTSServerProperties;
+
 public class RequestedResource {
 
 	private File file;
 	private DataInputStream dataInputStream;
 	private int httpStatusCode;
 	private String httpStatusDescription;
+	private int totalBytesRead;
+	private Boolean areThereBytesToRead;
 	
 	
 	/**
@@ -24,6 +28,8 @@ public class RequestedResource {
 		this.dataInputStream = dataInputStream;
 		this.httpStatusCode = httpStatusCode;
 		this.httpStatusDescription = httpStatusDescription;
+		this.totalBytesRead = 0;
+		this.areThereBytesToRead = Boolean.TRUE;
 	}
 	
 	
@@ -69,8 +75,52 @@ public class RequestedResource {
 	 * @throws IOException 
 	 */
 	public byte[] getBytesFromResource() throws IOException{
-		byte bytes[] = new byte[(int) this.file.length()];
+		int fileSize = this.getFileSize();
+		byte bytes[] = new byte[fileSize];
 		this.dataInputStream.read(bytes);
 		return bytes;
 	}
+	
+	
+	protected int getFileSize(){
+		if (this.file != null){
+			return (int) this.file.length();
+		}
+		return 0;
+	}
+	
+	
+	public Boolean areThereBytesToRead(){
+		return this.areThereBytesToRead;
+	}
+	
+	
+	public byte[] getNextBytes() throws IOException{
+		byte bytes[] = new byte[this.getNumberOfBytesToRead()];
+		this.dataInputStream.read(bytes);
+		return bytes;
+	}
+	
+	
+	protected int getNumberOfBytesToRead(){
+		int maxNumberOfBytes = Integer.valueOf(TTSServerProperties.getMaxNumberOfBytesToReadWithoudSengind());
+		int fileSize = this.getFileSize();
+
+		if (maxNumberOfBytes > fileSize){
+			this.areThereBytesToRead = false;
+			return fileSize;
+		}
+		else{
+			this.totalBytesRead = this.totalBytesRead + maxNumberOfBytes;
+			if(this.totalBytesRead > fileSize){
+				int numberOfBytesRemaining = this.totalBytesRead - fileSize;
+				this.areThereBytesToRead = false;
+				return numberOfBytesRemaining;
+			}
+			else{
+				return maxNumberOfBytes;
+			}
+		}
+	}
+	
 }

@@ -7,7 +7,7 @@ import java.io.File;
  * @author fausto
  *
  */
-public class TTSFileEntity {
+public class TTSFileEntity implements Comparable<TTSFileEntity>{
 	
 	public String name;
 	public long size;
@@ -94,5 +94,11 @@ public class TTSFileEntity {
 		else{
 			return "unknown";
 		}
+	}
+
+
+	@Override
+	public int compareTo(TTSFileEntity o) {
+		return this.getName().compareToIgnoreCase(o.getName());
 	}
 }

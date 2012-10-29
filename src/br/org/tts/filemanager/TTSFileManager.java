@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import br.org.tts.util.ArrayListUtils;
@@ -37,6 +38,7 @@ public class TTSFileManager {
 				list.add(ttsFileEntity);
 			}
 		}
+		Collections.sort(list);
 		return list;
 	}
 	

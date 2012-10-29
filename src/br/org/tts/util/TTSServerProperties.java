@@ -52,5 +52,10 @@ public class TTSServerProperties
 	}
 	
 	
+	public static String getMaxNumberOfBytesToReadWithoudSengind(){
+		return getResourceBundle().getString("maxNumberOfBytesToReadWithougSending");
+	}
+	
+	
 	
 }

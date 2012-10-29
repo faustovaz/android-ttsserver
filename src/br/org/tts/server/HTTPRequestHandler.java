@@ -171,10 +171,14 @@ public class HTTPRequestHandler implements Runnable{
 	 * 
 	 */
 	protected void sendResponse(RequestedResource requestedResource) throws IOException{
-			byte bytes[] = requestedResource.getBytesFromResource();
 			PrintStream input = new PrintStream(this.socket.getOutputStream());
 			input.print(this.httpHeaderBuilder.buildHTTPHeader(requestedResource));
-			input.write(bytes);
+	
+			byte bytes[];
+			while(requestedResource.areThereBytesToRead()){
+				bytes = requestedResource.getNextBytes();
+				input.write(bytes);
+			}
 			input.close();
 	}
 	
