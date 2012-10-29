@@ -48,12 +48,12 @@ public class TTSServerProperties
 	
 	
 	public static String getMaxNumberOfBytesToReadWithoutSaving(){
-		return getResourceBundle().getString("maxNumberOfBytesToReadWithouSaving");
+		return getResourceBundle().getString("maxNumberOfBytesToReadWithoutSaving");
 	}
 	
 	
 	public static String getMaxNumberOfBytesToReadWithoudSengind(){
-		return getResourceBundle().getString("maxNumberOfBytesToReadWithougSending");
+		return getResourceBundle().getString("maxNumberOfBytesToReadWithoutSending");
 	}
 	
 	
