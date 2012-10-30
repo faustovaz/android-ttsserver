@@ -148,7 +148,7 @@ public class HTTPRequestHandler implements Runnable{
 			this.sendRequestedResource();
 		}
 		catch(OutOfMemoryError outOfMemoryError){
-			System.out.println("Treta com memória");
+			System.out.println("Treta com memoria");
 			throw new TTSException("", outOfMemoryError.getMessage(), outOfMemoryError.getCause());
 		}
 		catch(IOException ioException){
