@@ -55,6 +55,13 @@ public class HTTPRequestHandler implements Runnable{
 		catch (IOException e){
 			Logger.error("TTSServerMessage.Socket_IOERROR", e.getMessage(), e.getCause());
 		}
+		finally{
+			try {
+				this.socket.close();
+			} catch (IOException e) {
+				Logger.error("TTSServerMessage.Socket_IOERROR", e.getMessage(), e.getCause());
+			}
+		}
 	}
 
 	
@@ -108,6 +115,7 @@ public class HTTPRequestHandler implements Runnable{
 	protected void processHTTPGetRequest() throws TTSException{
 		try{
 			this.sendRequestedResource();	
+			this.closeReader();
 		}
 		catch(IOException ioException){
 			throw new TTSException("TTSServerMessage.Socket_IOERROR", ioException.getMessage(), ioException.getCause());
@@ -146,6 +154,7 @@ public class HTTPRequestHandler implements Runnable{
 			this.getResourceManager().saveResource(bytes, fileName);
 			this.getResourceManager().finalizeSaveResource();
 			this.sendRequestedResource();
+			this.closeReader();
 		}
 		catch(OutOfMemoryError outOfMemoryError){
 			System.out.println("Treta com memoria");
@@ -184,6 +193,7 @@ public class HTTPRequestHandler implements Runnable{
 				input.write(bytes);
 			}
 			input.close();
+			requestedResource.close();
 	}
 	
 	
@@ -207,6 +217,11 @@ public class HTTPRequestHandler implements Runnable{
 			this.resourceManager = new ResourceManager();
 		}
 		return this.resourceManager;
+	}
+	
+	
+	protected void closeReader() throws IOException{
+		this.reader.close();
 	}
 	
 }

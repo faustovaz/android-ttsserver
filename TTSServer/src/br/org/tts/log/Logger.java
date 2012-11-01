@@ -15,6 +15,7 @@ public class Logger {
 	
 	public static void error(String ttsMessage, String message, Throwable cause){
 		System.out.println(ttsMessage);
+		cause.printStackTrace();
 	}
 	
 	

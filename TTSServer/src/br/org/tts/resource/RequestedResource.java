@@ -74,12 +74,12 @@ public class RequestedResource {
 	 * @return
 	 * @throws IOException 
 	 */
-	public byte[] getBytesFromResource() throws IOException{
-		int fileSize = this.getFileSize();
-		byte bytes[] = new byte[fileSize];
-		this.dataInputStream.read(bytes);
-		return bytes;
-	}
+//	public byte[] getBytesFromResource() throws IOException{
+//		int fileSize = this.getFileSize();
+//		byte bytes[] = new byte[fileSize];
+//		this.dataInputStream.read(bytes);
+//		return bytes;
+//	}
 	
 	
 	protected int getFileSize(){
@@ -121,6 +121,10 @@ public class RequestedResource {
 				return maxNumberOfBytes;
 			}
 		}
+	}
+	
+	public void close() throws IOException{
+		this.dataInputStream.close();
 	}
 	
 }
