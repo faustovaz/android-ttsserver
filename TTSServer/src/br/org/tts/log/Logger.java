@@ -4,18 +4,17 @@ public class Logger {
 	
 	
 	public static void error(String message){
-		System.out.println(message);
+
 	}
 
 	
 	public static void error(String message, Throwable cause){
-		System.out.println(message);
+
 	}
 	
 	
 	public static void error(String ttsMessage, String message, Throwable cause){
-		System.out.println(ttsMessage);
-		cause.printStackTrace();
+
 	}
 	
 	
@@ -33,8 +32,7 @@ public class Logger {
 		
 	}
 	
-	
-	public static void wtf(){	
-		
+	public static Object getLogger(){
+		return null;
 	}
 }

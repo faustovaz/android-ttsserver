@@ -31,7 +31,7 @@
         android:layout_below="@+id/toggleButton1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp"
-        android:text=""
+        android:text="TTS"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
