@@ -3,13 +3,12 @@ package br.org.tts.httpserver.resource;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import android.content.res.AssetFileDescriptor;
+import br.org.tts.httpserver.util.TTSFileEntity;
 import br.org.tts.httpserver.util.TTSServerProperties;
 
 public class RequestedResource {
 
-	private String fileName;
-	private AssetFileDescriptor fileDescriptor;
+	private TTSFileEntity fileEntity;
 	private DataInputStream dataInputStream;
 	private int httpStatusCode;
 	private String httpStatusDescription;
@@ -23,9 +22,8 @@ public class RequestedResource {
 	 * @param httpStatusCode
 	 * @param httpStatusDescription
 	 */
-	public RequestedResource(String fileName, AssetFileDescriptor fileDescriptor, DataInputStream dataInputStream, int httpStatusCode, String httpStatusDescription){
-		this.fileName = fileName;
-		this.fileDescriptor = fileDescriptor;
+	public RequestedResource(TTSFileEntity fileEntity, DataInputStream dataInputStream, int httpStatusCode, String httpStatusDescription){
+		this.fileEntity = fileEntity;
 		this.dataInputStream = dataInputStream;
 		this.httpStatusCode = httpStatusCode;
 		this.httpStatusDescription = httpStatusDescription;
@@ -39,7 +37,7 @@ public class RequestedResource {
 	 * @return
 	 */
 	public String  getFileName(){
-		return this.fileName;
+		return this.fileEntity.getName();
 	}
 	
 	
@@ -70,22 +68,9 @@ public class RequestedResource {
 	}
 	
 	
-	/**
-	 * 
-	 * @return
-	 * @throws IOException 
-	 */
-//	public byte[] getBytesFromResource() throws IOException{
-//		int fileSize = this.getFileSize();
-//		byte bytes[] = new byte[fileSize];
-//		this.dataInputStream.read(bytes);
-//		return bytes;
-//	}
-	
-	
 	protected int getFileSize(){
-		if (this.fileDescriptor != null){
-			return (int) this.fileDescriptor.getLength();
+		if (this.fileEntity != null){
+			return (int) this.fileEntity.getSize();
 		}
 		return 0;
 	}

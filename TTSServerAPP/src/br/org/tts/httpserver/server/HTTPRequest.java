@@ -67,21 +67,21 @@ public class HTTPRequest
 	{
 		try{
 			resource = URLDecoder.decode(resource, "UTF-8");
+			if(resource.equals("/")){
+				this.resource = TTSServerProperties.getDocumentRoot() + "/index.html";
+			}
+			else{
+				String resourceSplitted[] = resource.split("/"); //Example of expected resource download/file
+				if(resourceSplitted[1].equals("download")){
+					this.resource = TTSServerProperties.uploadedFilesPath() + "/" + resourceSplitted[2];
+				}
+				else{
+					this.resource = TTSServerProperties.getDocumentRoot() + resource;
+				}
+			}
 		}
 		catch(UnsupportedEncodingException e){
 			e.printStackTrace(); //TODO - Handle this exception properly
-		}
-		if(resource.equals("/")){
-			this.resource = TTSServerProperties.getDocumentRoot() + "/index.html";
-		}
-		else{
-			String resourceSplitted[] = resource.split("/"); //Example of expected resource download/file
-			if(resourceSplitted[1].equals("download")){
-				this.resource = TTSServerProperties.uploadedFilesPath() + "/" + resourceSplitted[2];
-			}
-			else{
-				this.resource = TTSServerProperties.getDocumentRoot() + resource;
-			}
 		}
 	}
 	
@@ -206,6 +206,10 @@ public class HTTPRequest
 			}			
 		}
 		return this.getHTTPHeaderFieldValue("File-Boundary");
+	}
+	
+	public Boolean isResourceMainIndexFile(){
+		return this.getResource().equals(TTSServerProperties.getDocumentRoot() + "/index.html");
 	}
 	
 }

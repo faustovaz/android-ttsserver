@@ -18,14 +18,14 @@ public class FileMap {
 
 	public static String getContentTypeFor(String filename) {
 		String fileAndExtension[] = filename.split("\\.");
-		if (fileAndExtension.length > 1){
-			String mymeType = getMimeTypesMap().get(fileAndExtension[fileAndExtension.length - 1]);
-			if(mymeType == null){
-				return "application/octet-stream";
-			}
-			return mymeType;
+		String mimeType;
+		if (fileAndExtension.length < 1){
+			 return "application/octet-stream";
 		}
-		return "application/octet-stream";
+		else{
+			mimeType = getMimeTypesMap().get(fileAndExtension[fileAndExtension.length - 1]);
+			return mimeType;
+		}
 	}
 	
 	

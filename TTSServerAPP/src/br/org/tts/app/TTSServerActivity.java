@@ -2,6 +2,7 @@ package br.org.tts.app;
 
 import br.org.tts.httpserver.exception.TTSException;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.ToggleButton;
 public class TTSServerActivity extends Activity {
 	
 	private static AssetManager manager;
+	private static Context applicationContext;
 	private TTSServerRunnable thread;
 
     @Override
@@ -19,6 +21,7 @@ public class TTSServerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         manager = getAssets();
+        applicationContext = getApplicationContext();
         
         final ToggleButton button = (ToggleButton) findViewById(R.id.toggleButton1);
         final TextView label = (TextView) findViewById(R.id.textView2);
@@ -70,7 +73,11 @@ public class TTSServerActivity extends Activity {
         return true;
     }
     
-    public static AssetManager getAssetManager(){
+    public static AssetManager getAssetManager(){  	
     	return manager;
+    }
+    
+    public static Context getContext(){
+    	return applicationContext;
     }
 }

@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.List;
 
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import br.org.tts.app.TTSServerActivity;
 import br.org.tts.httpserver.filemanager.TTSFileManager;
 import br.org.tts.httpserver.server.HTTPRequest;
+import br.org.tts.httpserver.util.TTSFileEntity;
 import br.org.tts.httpserver.util.TTSServerProperties;
 import br.org.tts.httpserver.util.TemplateEngine;
 
@@ -21,8 +21,7 @@ import br.org.tts.httpserver.util.TemplateEngine;
  */
 public class ResourceManager {
 
-	private String fileName;
-	private AssetFileDescriptor fileDescriptor;
+	private TTSFileEntity fileEntity;
 	private FileInputStream fileInputStream;
 	private DataInputStream dataInputStream;
 	private HTTPRequest httpRequest;
@@ -38,59 +37,48 @@ public class ResourceManager {
 	 */
 	public RequestedResource getRequestedResource(HTTPRequest httpRequest){
 		this.httpRequest = httpRequest;
-		this.loadFileDescriptor();
-		this.loadFileInputStream();
+		this.loadTTSFileEntity();
 		this.loadDataInputStream();
-		return new RequestedResource(this.fileName, this.fileDescriptor, this.dataInputStream, this.httpStatusCode, this.httpStatusDescription);
+		return new RequestedResource(this.fileEntity, this.dataInputStream, this.httpStatusCode, this.httpStatusDescription);
 	}
 
 	
 	/**
 	 * 
 	 */
-	protected void loadFileDescriptor(){
+	protected void loadTTSFileEntity(){
 			this.getTemplateEngine().generateRequestedResourceFromTemplate(this.httpRequest.getResource());	
-			AssetManager assetManager = TTSServerActivity.getAssetManager();
+			this.fileEntity = new TTSFileEntity();
 			try{
-				this.fileDescriptor = assetManager.openFd(this.httpRequest.getResource());
-				this.fileName = this.httpRequest.getResource();
+				if(this.httpRequest.isResourceMainIndexFile()){
+					this.fileInputStream = TTSServerActivity.getContext().openFileInput("index.html");
+					this.fileEntity.setName(this.httpRequest.getResource());
+					this.fileEntity.setSize(this.fileInputStream.getChannel().size());
+				}
+				else{
+					AssetFileDescriptor fileDescriptor = TTSServerActivity.getAssetManager().openFd(this.httpRequest.getResource());
+					this.fileInputStream = fileDescriptor.createInputStream();
+					this.fileEntity.setName(this.httpRequest.getResource());
+					this.fileEntity.setSize(this.fileInputStream.getChannel().size());
+				}
 				this.httpStatusCode = 200;
 				this.httpStatusDescription = "OK";
 			}
-			catch(IOException ioExceptiopn){
+			catch(IOException ioException){
 				try{
-					this.fileDescriptor = assetManager.openFd(this.httpRequest.getResource() + ".amr");
-					this.fileName = this.httpRequest.getResource();
+					AssetFileDescriptor fileDescriptor = TTSServerActivity.getAssetManager().openFd(this.httpRequest.getResource() + ".amr");
+					this.fileInputStream = fileDescriptor.createInputStream();
+					this.fileEntity.setName(this.httpRequest.getResource());
+					this.fileEntity.setSize(this.fileInputStream.getChannel().size());
 					this.httpStatusCode = 200;
 					this.httpStatusDescription = "OK";
 				}
 				catch (IOException e) {
 					this.load404File();
 				}
-				
 			}
 	}
 	
-	
-	/**
-	 * 
-	 */
-	protected void loadFileInputStream(){
-		try{
-			this.fileInputStream = this.fileDescriptor.createInputStream();
-		}
-		catch(IOException fileNotFound){
-			this.load404File();
-			try {
-				this.fileInputStream = this.fileDescriptor.createInputStream();
-			} 
-			catch (IOException e) {
-				//This is catch block is kind of impossible to execute, once the file we are attempting to open is the 404.html
-				//The 404.html file is located at resources/webappfiles and as a part of the TTSServer is going to be impossible to not find it.
-				e.printStackTrace(); //Just to be nice :D
-			}
-		}
-	}
 	
 	/**
 	 * 
@@ -116,8 +104,10 @@ public class ResourceManager {
 	
 	public void load404File(){
 		try{
-			this.fileDescriptor = TTSServerActivity.getAssetManager().openFd(TTSServerProperties.getDocumentRoot() + "/404.html.amr");
-			this.fileName = "404.html";
+			AssetFileDescriptor fileDescriptor = TTSServerActivity.getAssetManager().openFd(TTSServerProperties.getDocumentRoot() + "/404.html.amr");
+			this.fileEntity.setName("404.html");
+			this.fileEntity.setSize(fileDescriptor.getLength());
+			this.fileInputStream = fileDescriptor.createInputStream();
 			this.httpStatusCode = 400;
 			this.httpStatusDescription = "NOT FOUND";
 		}

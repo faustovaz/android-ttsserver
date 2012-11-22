@@ -1,11 +1,16 @@
 package br.org.tts.httpserver.util;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.util.Log;
 import br.org.tts.app.TTSServerActivity;
 import br.org.tts.httpserver.filemanager.FileMap;
 import br.org.tts.httpserver.filemanager.TTSFileManager;
@@ -21,23 +26,14 @@ public class TemplateEngine {
 	
 	/**
 	 * 
-	 */
-	public TemplateEngine(){
-	}
-	
-	
-	
-	/**
-	 * 
 	 * @param requestedResource
 	 */
-	public String generateRequestedResourceFromTemplate(String requestedResource){
+	public void generateRequestedResourceFromTemplate(String requestedResource){
 		String resourceType = FileMap.getContentTypeFor(requestedResource);
 	
 		if(resourceType.equals("text/html") && (requestedResource.equals(TTSServerProperties.getDocumentRoot() + "/index.html"))){
-			return this.generateHTMLFileFromTemplate(requestedResource);
+			this.generateHTMLFileFromTemplate(requestedResource);
 		}
-		return null;
 	}
 	
 	
@@ -46,13 +42,14 @@ public class TemplateEngine {
 	 * 
 	 * @param requestedResource
 	 */
-	protected String generateHTMLFileFromTemplate(String requestedResource){
+	protected void generateHTMLFileFromTemplate(String requestedResource){
 		String templateName = requestedResource + ".ftl";
 		AssetManager m = TTSServerActivity.getAssetManager();
 		try {
-			AssetFileDescriptor assetFileDescriptor = m.openFd(templateName + ".amr");
-			FileInputStream f = new FileInputStream(assetFileDescriptor.getFileDescriptor());
-			MiniTemplator templator = new MiniTemplator(f, "");
+			
+			InputStream input = m.open(templateName + ".amr");
+			
+			MiniTemplator templator = new MiniTemplator(input, "");
 			
 			TTSFileManager t = new TTSFileManager();
 			List<TTSFileEntity> files = t.getUploadedFiles();
@@ -66,13 +63,18 @@ public class TemplateEngine {
 				templator.addBlock("Block");
 				
 			}
-			return templator.generateOutput();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Context context = TTSServerActivity.getContext();
+			FileOutputStream inputStream = context.openFileOutput("index.html", Context.MODE_PRIVATE);
+			OutputStreamWriter writer = new OutputStreamWriter(inputStream);
+			//templator.generateOutput(writer);
+			String s = templator.generateOutput();
+			Log.v("UHET", s);
+			writer.close();
+			inputStream.close();
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "";
 		
 	}
 }

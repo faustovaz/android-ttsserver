@@ -15,8 +15,9 @@ package br.org.tts.templator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -130,7 +131,7 @@ public static class TemplateSpecification {                // template specifica
    public String             templateFileName;
    
    
-   public FileInputStream templateInputStream;
+   public InputStream templateInputStream;
 
    /**
    * The path of the base directory for reading subtemplate files.
@@ -227,7 +228,7 @@ private int                  blockInstTabCnt;              // no of entries used
 	}
 	
 	
-	public MiniTemplator(FileInputStream fileInputStream, String templateBasePath) throws TemplateSyntaxException, IOException{
+	public MiniTemplator(InputStream fileInputStream, String templateBasePath) throws TemplateSyntaxException, IOException{
 		TemplateSpecification templateSpec = new TemplateSpecification();
 		templateSpec.templateInputStream = fileInputStream;
 		templateSpec.subtemplateBasePath = templateBasePath;
@@ -720,7 +721,7 @@ private void writeBlockInstance (StringBuilder out, int blockInstNo) {
 	}
 	
 	
-	private String readFileInputStreamIntoString(FileInputStream fileInputStream) throws IOException{
+	private String readFileInputStreamIntoString(InputStream fileInputStream) throws IOException{
 		InputStreamReader reader = new InputStreamReader(fileInputStream, charset);
 		try {
 			return readStreamIntoString(reader);
