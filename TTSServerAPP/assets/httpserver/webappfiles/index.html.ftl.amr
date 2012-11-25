@@ -13,8 +13,7 @@
 			</div>
 			<div id="upload-files">
 				<div id="upload-files-text">
-					Arraste seus</br>arquivos aqui</br>ou selecione-os
-					<!-- Drag n' drop</br>your files here</br>or select them -->
+					Drag n' drop</br>your files here</br>or select them
 				</div>
 				<div id="upload-files-holder-button">	
 					<div id="upload-files-button">
@@ -45,6 +44,7 @@
 		<ul class="file-list" id="list-selected-files">																		
 		</ul>
 	</div>
-	<div id="show-files-to-upload-background" />
+	<div id="show-files-to-upload-background">
+	</div>
 </body>
 </html>
