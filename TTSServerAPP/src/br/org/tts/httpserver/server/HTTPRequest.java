@@ -25,6 +25,7 @@ public class HTTPRequest
 	private HTTPMethod method;
 	private Map<String, String> headers;
 	private HTTPRequestParser httpRequestParser;
+	private Boolean isARequestToDownload = false; 
 	
 		
 	/**
@@ -74,6 +75,7 @@ public class HTTPRequest
 				String resourceSplitted[] = resource.split("/"); //Example of expected resource download/file
 				if(resourceSplitted[1].equals("download")){
 					this.resource = TTSServerProperties.uploadedFilesPath() + "/" + resourceSplitted[2];
+					this.isARequestToDownload = true;
 				}
 				else{
 					this.resource = TTSServerProperties.getDocumentRoot() + resource;
@@ -210,6 +212,10 @@ public class HTTPRequest
 	
 	public Boolean isResourceMainIndexFile(){
 		return this.getResource().equals(TTSServerProperties.getDocumentRoot() + "/index.html");
+	}
+	
+	public Boolean isResourceForDownload(){
+		return this.isARequestToDownload;
 	}
 	
 }

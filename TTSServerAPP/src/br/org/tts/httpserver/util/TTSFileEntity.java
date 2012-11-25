@@ -1,6 +1,9 @@
 package br.org.tts.httpserver.util;
 
 import java.io.File;
+import java.io.IOException;
+
+import br.org.tts.app.TTSServerActivity;
 
 /**
  * 
@@ -86,14 +89,15 @@ public class TTSFileEntity implements Comparable<TTSFileEntity>{
 		return this.normalizedFileName;
 	}
 	
-	public String getFileTypeImageName(){
-		File file = new File("resources/webappfiles/img/" + this.getExtension() + ".png");
-		if (file.exists()){
-			return this.getExtension();
+	public String getFileTypeImageName() throws IOException{
+		String images[] = TTSServerActivity.getAssetManager().list("httpserver/webappfiles/img");
+		for (String imageName : images) {
+			String[] fileName = imageName.split("\\.");
+			if (this.getExtension().equals(fileName[0])){
+				return this.getExtension();
+			}
 		}
-		else{
-			return "unknown";
-		}
+		return "unknown";
 	}
 
 

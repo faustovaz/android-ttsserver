@@ -1,7 +1,9 @@
 package br.org.tts.httpserver.resource;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -47,31 +49,23 @@ public class ResourceManager {
 	 * 
 	 */
 	protected void loadTTSFileEntity(){
-			this.getTemplateEngine().generateRequestedResourceFromTemplate(this.httpRequest.getResource());	
 			this.fileEntity = new TTSFileEntity();
 			try{
 				if(this.httpRequest.isResourceMainIndexFile()){
-					this.fileInputStream = TTSServerActivity.getContext().openFileInput("index.html");
-					this.fileEntity.setName(this.httpRequest.getResource());
-					this.fileEntity.setSize(this.fileInputStream.getChannel().size());
+					this.loadIndexFile();
 				}
 				else{
-					AssetFileDescriptor fileDescriptor = TTSServerActivity.getAssetManager().openFd(this.httpRequest.getResource());
-					this.fileInputStream = fileDescriptor.createInputStream();
-					this.fileEntity.setName(this.httpRequest.getResource());
-					this.fileEntity.setSize(this.fileInputStream.getChannel().size());
+					if (this.httpRequest.isResourceForDownload())
+						this.loadDownloadableFile();
+					else
+						this.loadSystemFile();
 				}
 				this.httpStatusCode = 200;
 				this.httpStatusDescription = "OK";
 			}
 			catch(IOException ioException){
 				try{
-					AssetFileDescriptor fileDescriptor = TTSServerActivity.getAssetManager().openFd(this.httpRequest.getResource() + ".amr");
-					this.fileInputStream = fileDescriptor.createInputStream();
-					this.fileEntity.setName(this.httpRequest.getResource());
-					this.fileEntity.setSize(this.fileInputStream.getChannel().size());
-					this.httpStatusCode = 200;
-					this.httpStatusDescription = "OK";
+					this.loadSystemFileWithSpecialExtension();
 				}
 				catch (IOException e) {
 					this.load404File();
@@ -79,6 +73,39 @@ public class ResourceManager {
 			}
 	}
 	
+	
+	protected void loadIndexFile() throws IOException{
+		this.getTemplateEngine().generateRequestedResourceFromTemplate(this.httpRequest.getResource());	
+		this.fileInputStream = TTSServerActivity.getContext().openFileInput("index.html");
+		this.fileEntity.setName(this.httpRequest.getResource());
+		this.fileEntity.setSize(this.fileInputStream.getChannel().size());
+	}
+	
+	
+	protected void loadDownloadableFile() throws FileNotFoundException{
+		File file = new File(this.httpRequest.getResource());
+		this.fileInputStream = new FileInputStream(file);
+		this.fileEntity.setName(this.httpRequest.getResource());
+		this.fileEntity.setSize(file.length());
+	}
+	
+	
+	protected void loadSystemFile() throws IOException{
+		AssetFileDescriptor fileDescriptor = TTSServerActivity.getAssetManager().openFd(this.httpRequest.getResource());
+		this.fileInputStream = fileDescriptor.createInputStream();
+		this.fileEntity.setName(this.httpRequest.getResource());
+		this.fileEntity.setSize(fileDescriptor.getLength());
+	}
+	
+	
+	protected void loadSystemFileWithSpecialExtension() throws IOException{
+		AssetFileDescriptor fileDescriptor = TTSServerActivity.getAssetManager().openFd(this.httpRequest.getResource() + ".amr");
+		this.fileInputStream = fileDescriptor.createInputStream();
+		this.fileEntity.setName(this.httpRequest.getResource());
+		this.fileEntity.setSize(fileDescriptor.getLength());
+		this.httpStatusCode = 200;
+		this.httpStatusDescription = "OK";
+	}
 	
 	/**
 	 * 

@@ -372,14 +372,16 @@ public MiniTemplator cloneReset() {
 * @throws VariableNotDefinedException when no variable with the
 *    specified name exists in the template and <code>isOptional</code> is <code>false</code>.
 */
-public void setVariable (String variableName, String variableValue, boolean isOptional)
-      throws VariableNotDefinedException {
-   int varNo = mtp.lookupVariableName(variableName);
-   if (varNo == -1) {
-      if (isOptional) {
-         return; }
-      throw new VariableNotDefinedException(variableName); }
-   varValuesTab[varNo] = variableValue; }
+	public void setVariable (String variableName, String variableValue, boolean isOptional) throws VariableNotDefinedException {
+		int varNo = mtp.lookupVariableName(variableName);
+		if (varNo == -1) {
+			if (isOptional) {
+				return; 
+			}
+			throw new VariableNotDefinedException(variableName); 
+		}
+		varValuesTab[varNo] = variableValue; 
+	}
 
 /**
 * Sets a template variable.
@@ -390,9 +392,9 @@ public void setVariable (String variableName, String variableValue, boolean isOp
 *    specified name exists in the template.
 * @see #setVariable(String, String, boolean)
 */
-public void setVariable (String variableName, String variableValue)
-      throws VariableNotDefinedException {
-   setVariable(variableName, variableValue, false); }
+	public void setVariable (String variableName, String variableValue)throws VariableNotDefinedException {
+		setVariable(variableName, variableValue, false); 
+	}
 
 /**
 * Sets a template variable to an integer value.
@@ -507,16 +509,19 @@ public Map<String, String> getVariables() {
 * @throws BlockNotDefinedException when no block with the specified name
 *    exists in the template and <code>isOptional</code> is <code>false</code>.
 */
-public void addBlock (String blockName, boolean isOptional)
-      throws BlockNotDefinedException {
-   int blockNo = mtp.lookupBlockName(blockName);
-   if(blockNo == -1) {
-      if (isOptional) {
-         return; }
-      throw new BlockNotDefinedException(blockName); }
-   while (blockNo != -1) {
-      addBlockByNo(blockNo);
-      blockNo = mtp.blockTab[blockNo].nextWithSameName; }}
+	public void addBlock (String blockName, boolean isOptional) throws BlockNotDefinedException {
+		int blockNo = mtp.lookupBlockName(blockName);
+		if(blockNo == -1) {
+			if (isOptional) {
+				return; 
+			}
+			throw new BlockNotDefinedException(blockName); 
+		}
+		while (blockNo != -1) {
+			addBlockByNo(blockNo);
+			blockNo = mtp.blockTab[blockNo].nextWithSameName; 
+		}
+	}
 
 /**
 * Adds an instance of a template block.
@@ -526,9 +531,9 @@ public void addBlock (String blockName, boolean isOptional)
 *    exists in the template.
 * @see #addBlock(String, boolean)
 */
-public void addBlock (String blockName)
-      throws BlockNotDefinedException {
-   addBlock(blockName, false); }
+	public void addBlock (String blockName)throws BlockNotDefinedException {
+		addBlock(blockName, false); 
+	}
 
 /**
 * Adds an instance of an optional template block.
@@ -539,28 +544,35 @@ public void addBlock (String blockName)
 public void addBlockOpt (String blockName) {
    addBlock(blockName, true); }
 
-private void addBlockByNo (int blockNo) {
-   MiniTemplatorParser.BlockTabRec btr = mtp.blockTab[blockNo];
-   BlockDynTabRec bdtr = blockDynTab[blockNo];
-   int blockInstNo = registerBlockInstance();
-   BlockInstTabRec bitr = blockInstTab[blockInstNo];
-   if (bdtr.firstBlockInstNo == -1) {
-      bdtr.firstBlockInstNo = blockInstNo; }
-   if (bdtr.lastBlockInstNo != -1) {
-      blockInstTab[bdtr.lastBlockInstNo].nextBlockInstNo = blockInstNo; } // set forward pointer of chain
-   bdtr.lastBlockInstNo = blockInstNo;
-   bitr.blockNo = blockNo;
-   bitr.instanceLevel = bdtr.instances++;
-   if (btr.parentBlockNo == -1) {
-      bitr.parentInstLevel = -1; }
-    else {
-      bitr.parentInstLevel = blockDynTab[btr.parentBlockNo].instances; }
-   bitr.nextBlockInstNo = -1;
-   if (btr.blockVarCnt > 0) {
-      bitr.blockVarTab = new String[btr.blockVarCnt]; }
-   for (int blockVarNo=0; blockVarNo<btr.blockVarCnt; blockVarNo++) {  // copy instance variables for this block
-      int varNo = btr.blockVarNoToVarNoMap[blockVarNo];
-      bitr.blockVarTab[blockVarNo] = varValuesTab[varNo]; }}
+	private void addBlockByNo (int blockNo) {
+		MiniTemplatorParser.BlockTabRec btr = mtp.blockTab[blockNo];
+		BlockDynTabRec bdtr = blockDynTab[blockNo];
+		int blockInstNo = registerBlockInstance();
+		BlockInstTabRec bitr = blockInstTab[blockInstNo];
+		if (bdtr.firstBlockInstNo == -1) {
+			bdtr.firstBlockInstNo = blockInstNo; 
+		}
+		if (bdtr.lastBlockInstNo != -1) {
+			blockInstTab[bdtr.lastBlockInstNo].nextBlockInstNo = blockInstNo; 
+		} // set forward pointer of chain
+		bdtr.lastBlockInstNo = blockInstNo;
+		bitr.blockNo = blockNo;
+		bitr.instanceLevel = bdtr.instances++;	
+		if (btr.parentBlockNo == -1) {
+			bitr.parentInstLevel = -1; 
+		}
+		else {
+			bitr.parentInstLevel = blockDynTab[btr.parentBlockNo].instances; 
+		}
+		bitr.nextBlockInstNo = -1;
+		if (btr.blockVarCnt > 0) {
+			bitr.blockVarTab = new String[btr.blockVarCnt]; 
+		}
+		for (int blockVarNo=0; blockVarNo<btr.blockVarCnt; blockVarNo++) {  // copy instance variables for this block
+			int varNo = btr.blockVarNoToVarNoMap[blockVarNo];
+			bitr.blockVarTab[blockVarNo] = varValuesTab[varNo]; 
+		}
+	}
 
 // Returns the block instance number.
 private int registerBlockInstance() {
@@ -621,15 +633,18 @@ public void generateOutput (Writer outputWriter)
 * Generates the HTML page and returns it as a string.
 * @return A string that contains the generated HTML page.
 */
-public String generateOutput() {
-   if (blockDynTab[0].instances == 0) {
-      addBlockByNo(0); }                         // add main block
-   for (int blockNo=0; blockNo<mtp.blockTabCnt; blockNo++) {
-      BlockDynTabRec bdtr = blockDynTab[blockNo];
-      bdtr.currBlockInstNo = bdtr.firstBlockInstNo; }
-   StringBuilder out = new StringBuilder();
-   writeBlockInstances(out, 0, -1);
-   return out.toString(); }
+	public String generateOutput() {
+		if (blockDynTab[0].instances == 0) {
+			addBlockByNo(0); 
+		}                         // add main block
+		for (int blockNo=0; blockNo<mtp.blockTabCnt; blockNo++) {
+			BlockDynTabRec bdtr = blockDynTab[blockNo];
+			bdtr.currBlockInstNo = bdtr.firstBlockInstNo; 
+		}
+		StringBuilder out = new StringBuilder();
+		writeBlockInstances(out, 0, -1);
+		return out.toString(); 
+	}
 
 // Writes all instances of a block that are contained within a specific
 // parent block instance.
@@ -1342,12 +1357,14 @@ public int lookupVariableName (String varName) {
 // If there are multiple blocks with the same name, the block number of the last
 // registered block with that name is returned.
 // Returns -1 if the block name is not found.
-public int lookupBlockName (String blockName) {
-   Integer blockNoWrapper = blockNameToNoMap.get(blockName.toUpperCase());
-   if (blockNoWrapper == null) {
-      return -1; }
-   int blockNo = blockNoWrapper.intValue();
-   return blockNo; }
+	public int lookupBlockName (String blockName){
+		Integer blockNoWrapper = blockNameToNoMap.get(blockName.toUpperCase());
+		if (blockNoWrapper == null) {
+			return -1;
+		}
+		int blockNo = blockNoWrapper.intValue();
+		return blockNo; 
+	}
 
 //--- general utility routines ---------------------------------------
 

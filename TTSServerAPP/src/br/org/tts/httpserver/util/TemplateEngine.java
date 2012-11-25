@@ -1,6 +1,5 @@
 package br.org.tts.httpserver.util;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,9 +7,7 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.util.Log;
 import br.org.tts.app.TTSServerActivity;
 import br.org.tts.httpserver.filemanager.FileMap;
 import br.org.tts.httpserver.filemanager.TTSFileManager;
@@ -51,24 +48,23 @@ public class TemplateEngine {
 			
 			MiniTemplator templator = new MiniTemplator(input, "");
 			
+			input.close();
+			
 			TTSFileManager t = new TTSFileManager();
 			List<TTSFileEntity> files = t.getUploadedFiles();
 			for (TTSFileEntity ttsFileEntity : files) {
-				
-				templator.addBlock("Block");
 				templator.setVariable("fileTypeImageName", ttsFileEntity.getFileTypeImageName());
 				templator.setVariable("normalizedFileName", ttsFileEntity.getNormalizedFileName());
 				templator.setVariable("normalizedFileSize", ttsFileEntity.normalizedSize);
 				templator.setVariable("name", ttsFileEntity.getName());
 				templator.addBlock("Block");
-				
 			}
 			Context context = TTSServerActivity.getContext();
+			context.deleteFile("index.html");
 			FileOutputStream inputStream = context.openFileOutput("index.html", Context.MODE_PRIVATE);
 			OutputStreamWriter writer = new OutputStreamWriter(inputStream);
-			//templator.generateOutput(writer);
-			String s = templator.generateOutput();
-			Log.v("UHET", s);
+			String str = templator.generateOutput();
+			templator.generateOutput(writer);
 			writer.close();
 			inputStream.close();
 		} 
