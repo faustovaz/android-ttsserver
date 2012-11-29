@@ -1,10 +1,11 @@
 <resources>
 
-    <string name="app_name">TTSServerAPP</string>
+    <string name="app_name">TTSServer-UHET</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">TTSServer</string>
     <string name="app_title">TTSServer</string>
-    <string name="toogle_button_ligar">Ligar</string>
+    <string name="toogle_button_ligar">Turn ON</string>
+    <string name="whatahell"></string>
 
-</resources>
+</resources>	

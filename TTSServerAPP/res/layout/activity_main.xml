@@ -1,37 +1,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#C7C4F1" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/txtViewAppTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="69dp"
         android:text="@string/app_title"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ToggleButton
-        android:id="@+id/toggleButton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="167dp"
+        android:id="@+id/btnTurnOnOff"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/txtViewAppTitle"
+        android:layout_below="@+id/txtViewAppTitle"
+        android:layout_marginTop="28dp"
         android:text="@string/toogle_button_ligar"
         android:textOff="Ligar"
         android:textOn="Desligar" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtViewIPMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toggleButton1"
+        android:layout_below="@+id/btnTurnOnOff"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp"
-        android:text="TTS"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginTop="100dp"
+        android:text="@string/whatahell"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#2B6682" />
+
 
 </RelativeLayout>
