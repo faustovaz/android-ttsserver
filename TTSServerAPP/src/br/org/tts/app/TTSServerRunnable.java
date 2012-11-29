@@ -18,7 +18,6 @@ public class TTSServerRunnable extends Thread {
 		try {
 			this.server.start();
 		} catch (TTSException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

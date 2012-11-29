@@ -74,7 +74,7 @@ public class HTTPRequest
 			else{
 				String resourceSplitted[] = resource.split("/"); //Example of expected resource download/file
 				if(resourceSplitted[1].equals("download")){
-					this.resource = TTSServerProperties.uploadedFilesPath() + "/" + resourceSplitted[2];
+					this.resource = TTSServerProperties.uploadedFilesPath() + resourceSplitted[2];
 					this.isARequestToDownload = true;
 				}
 				else{

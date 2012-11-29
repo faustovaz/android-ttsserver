@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.os.Environment;
 import br.org.tts.httpserver.util.ArrayListUtils;
 import br.org.tts.httpserver.util.TTSFileEntity;
 import br.org.tts.httpserver.util.TTSServerProperties;
@@ -27,7 +28,7 @@ public class TTSFileManager {
 	 * @return List<String>
 	 */
 	public List<TTSFileEntity> getUploadedFiles(){
-		File uploadedFilesPath = new File(TTSServerProperties.uploadedFilesPath());
+		File uploadedFilesPath = new File(Environment.getExternalStorageDirectory() + TTSServerProperties.uploadedFilesPath());
 		List<TTSFileEntity> list = new ArrayList<TTSFileEntity>();
 		if(uploadedFilesPath.isDirectory()){
 			File filesInPath[] = uploadedFilesPath.listFiles();
@@ -51,7 +52,7 @@ public class TTSFileManager {
 	
 	protected FileOutputStream getFileOutputStream(String fileName) throws IOException{
 		if (this.output == null){
-			this.output = new FileOutputStream(TTSServerProperties.uploadedFilesPath() + "/" + fileName);
+			this.output = new FileOutputStream(Environment.getExternalStorageDirectory() + TTSServerProperties.uploadedFilesPath() + fileName);
 		}
 		return this.output;
 	}

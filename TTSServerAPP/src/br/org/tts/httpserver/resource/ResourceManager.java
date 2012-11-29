@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import android.content.res.AssetFileDescriptor;
+import android.os.Environment;
 import br.org.tts.app.TTSServerActivity;
 import br.org.tts.httpserver.filemanager.TTSFileManager;
 import br.org.tts.httpserver.server.HTTPRequest;
@@ -83,7 +84,7 @@ public class ResourceManager {
 	
 	
 	protected void loadDownloadableFile() throws FileNotFoundException{
-		File file = new File(this.httpRequest.getResource());
+		File file = new File(Environment.getExternalStorageDirectory() + this.httpRequest.getResource());
 		this.fileInputStream = new FileInputStream(file);
 		this.fileEntity.setName(this.httpRequest.getResource());
 		this.fileEntity.setSize(file.length());

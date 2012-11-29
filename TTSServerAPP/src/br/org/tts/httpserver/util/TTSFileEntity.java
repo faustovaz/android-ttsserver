@@ -1,6 +1,5 @@
 package br.org.tts.httpserver.util;
 
-import java.io.File;
 import java.io.IOException;
 
 import br.org.tts.app.TTSServerActivity;
@@ -39,8 +38,8 @@ public class TTSFileEntity implements Comparable<TTSFileEntity>{
 	}
 	
 	protected void setNormalizedFileName(){
-		if(this.name.length() > 70){
-			this.normalizedFileName = this.name.substring(0,70) + "...";
+		if(this.name.length() > 60){
+			this.normalizedFileName = this.name.substring(0,60) + "...";
 		}
 		else{
 			this.normalizedFileName = this.name;
