@@ -9,7 +9,7 @@
 	<div id="main">
 		<div id="content">
 			<div id="fork-me">
-				<img src="img/fork-me.png" />
+				<a href="https://github.com/faustovaz/android-ttsserver"><img src="img/fork-me.png" /></a>
 			</div>
 			<div id="upload-files">
 				<div id="upload-files-text">
