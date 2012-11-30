@@ -2,8 +2,11 @@ package br.org.tts.httpserver.setup;
 
 import java.io.File;
 
+import br.org.tts.app.TTSServerActivity;
 import br.org.tts.httpserver.util.TTSServerProperties;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 
 /**
@@ -17,6 +20,17 @@ public class Setup {
 		if (!this.filesDirectoryExists()){
 			this.createFilesDirectory();
 		}
+	}
+	
+	public Boolean isDeviceConnected(){
+		ConnectivityManager connectivityManager = TTSServerActivity.getConnectivityManager();
+		NetworkInfo networks[] = connectivityManager.getAllNetworkInfo();
+		for (NetworkInfo networkInfo : networks) {
+			if (networkInfo.getTypeName().equalsIgnoreCase("WIFI")){
+				return networkInfo.isConnected();
+			}
+		}
+		return false;
 	}
 	
 	
