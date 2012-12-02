@@ -1,6 +1,7 @@
 package br.org.tts.app;
 
 import br.org.tts.httpserver.exception.TTSException;
+import br.org.tts.httpserver.log.Logger;
 import br.org.tts.httpserver.server.TTSServer;
 
 public class TTSServerRunnable extends Thread {
@@ -18,7 +19,7 @@ public class TTSServerRunnable extends Thread {
 		try {
 			this.server.start();
 		} catch (TTSException e) {
-			e.printStackTrace();
+			Logger.error(e.getMessage(), e.getCause());
 		}
 	}
 	
