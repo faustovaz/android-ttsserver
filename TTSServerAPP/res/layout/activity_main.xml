@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnTurnOnOff"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:text="@string/whatahell"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#2B6682" />
