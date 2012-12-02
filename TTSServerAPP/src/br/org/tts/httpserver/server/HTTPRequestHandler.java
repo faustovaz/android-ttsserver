@@ -68,7 +68,9 @@ public class HTTPRequestHandler implements Runnable{
 			this.processHTTPGetRequest();
 		}
 		else{
-			this.processHTTPPostRequest();
+			if (this.getHTTPRequest().isPOST()){
+				this.processHTTPPostRequest();
+			}
 		}
 	}
 	

@@ -116,7 +116,10 @@ public class HTTPRequest
 	 * @return The value of the field represented by name (String)
 	 */
 	public String getHTTPHeaderFieldValue(String name){
-		return this.headers.get(name);
+		String value = this.headers.get(name);
+		if (value == null)
+			return "0";
+		return value;
 	}
 	
 	
